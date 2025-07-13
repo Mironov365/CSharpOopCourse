@@ -9,94 +9,74 @@ namespace RangeTask
     internal class Range
     {
         public double From { get; set; }
+
         public double To { get; set; }
 
         public Range(double from, double to)
         {
-            this.From = from;
-            this.To = to;
+            From = from;
+            To = to;
         }
 
-        public Range() : this(0, 0)
-        {
-        }
-
-        public double GetDistance()
+        public double GetLength()
         {
             return To - From;
         }
 
         public bool IsInside(double point)
         {
-            return (From <= point) && (To >= point);
+            return point >= From && point <= To;
         }
 
-        public Range RangesIntersection(Range range)
+        public Range? GetIntersection(Range range)
         {
-            if ((From < range.From && To <= range.From) || (From > range.From && From >= range.To))
+            if (range.From >= To || range.To <= From)
             {
                 return null;
             }
 
-            double maxFrom = Math.Max(this.From, range.From);
-            double minTo = Math.Min(this.To, range.To);
+            double maxFrom = Math.Max(From, range.From);
+            double minTo = Math.Min(To, range.To);
 
             return new Range(maxFrom, minTo);
         }
 
-        public Range[] RangesUnion(Range range)
+        public Range[] GetUnion(Range range)
         {
-            if ((From < range.From && To < range.From) || (From > range.From && From > range.To))
+            if (range.From > To || range.To < From)
             {
-                Range[] rangeSeparateArray = new Range[2];
-                Range r1 = new Range(From, To);
-                Range r2 = new Range(range.From, range.To);
-                return new Range[2] { r1, r2 };
+                return new Range[] { new Range(From, To), new Range(range.From, range.To) };
             }
 
-            Range[] rangeArray = new Range[1];
+            double minFrom = Math.Min(From, range.From);
+            double maxTo = Math.Max(To, range.To);
 
-            double minFrom = Math.Min(this.From, range.From);
-            double maxTo = Math.Max(this.To, range.To);
-            rangeArray[0] = new Range(minFrom, maxTo);
-
-            return rangeArray;
+            return new Range[] { new Range(minFrom, maxTo) };
         }
 
-        public Range[] RangesDifference(Range range)
+        public Range[] GetDifference(Range range)
         {
             if (From >= range.From && To <= range.To)
             {
-                Range r0 = new Range();
-                return new Range[1] { r0 };
+                return new Range[] { new Range(0, 0) };
             }
 
             if (From < range.From && To > range.To)
-            {                
-                Range r1 = new Range(From, range.From);
-                Range r2 = new Range(range.To, To);
-                return new Range[2] { r1, r2 };
-            }
-
-            if ((From <= range.From && To <= range.From) || (From >= range.From && From >= range.To))
-            {                
-                Range  r1 = new Range(From, To);                
-                return new Range[1] { r1 };
-            }
-
-            if (From < range.To)
             {
-                Range r2 = new Range(From, range.From);
-                return new Range[1] { r2 };
+                return new Range[] { new Range(From, range.From), new Range(range.To, To) };
             }
 
-            if (To > range.From)
+            if (range.From > To || range.To < From)
             {
-                Range r3 = new Range(range.From, From);
-                return new Range[1] { r3 };
+                return new Range[] { new Range(From, To) };
             }
 
-            return null;
+            if (From >= range.From)
+            {
+                return new Range[] { new Range(range.To, To) };
+            }
+
+            return new Range[] { new Range(From, range.From) };
         }
     }
 }
