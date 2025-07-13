@@ -5,6 +5,8 @@ VisualStudioVersion = 17.12.35707.178
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RangeTask", "RangeTask\RangeTask.csproj", "{A2D31E6E-C9FA-4855-9160-8D301C1F999F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShapesTask", "ShapesTask\ShapesTask.csproj", "{768A2EE3-F323-4938-BF0B-41E0155334DA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{A2D31E6E-C9FA-4855-9160-8D301C1F999F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A2D31E6E-C9FA-4855-9160-8D301C1F999F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A2D31E6E-C9FA-4855-9160-8D301C1F999F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{768A2EE3-F323-4938-BF0B-41E0155334DA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{768A2EE3-F323-4938-BF0B-41E0155334DA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{768A2EE3-F323-4938-BF0B-41E0155334DA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{768A2EE3-F323-4938-BF0B-41E0155334DA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

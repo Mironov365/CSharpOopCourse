@@ -52,7 +52,7 @@
         {
             if (From >= range.From && To <= range.To)
             {
-                return new Range[] { new Range(0, 0) };
+                return new Range[] { };
             }
 
             if (From < range.From && To > range.To)
