@@ -40,7 +40,7 @@
             Range?[] IntersectionArray = new Range?[] { range1.GetIntersection(range2), range2.GetIntersection(range3),
             range4.GetIntersection(range5), range4.GetIntersection(range3) };
 
-            foreach (Range range in IntersectionArray)
+            foreach (Range? range in IntersectionArray)
             {
                 if (range is not null)
                 {
