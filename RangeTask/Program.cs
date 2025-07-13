@@ -42,7 +42,7 @@
 
             foreach (Range range in IntersectionArray)
             {
-                if (range != null)
+                if (range is not null)
                 {
                     Console.WriteLine($"{range.From}, {range.To}");
                 }
