@@ -41,7 +41,8 @@
             Console.WriteLine();
 
             Console.WriteLine("Умножение вектора 3 на скаляр 5");
-            Console.WriteLine(vector3.GetMultiplication(5));
+            vector3.GetMultiplicationByScalar(5);
+            Console.WriteLine(vector3);
             Console.WriteLine();
 
             Console.WriteLine("Разворот вектора 3");

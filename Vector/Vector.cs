@@ -20,7 +20,15 @@ namespace VectorTask
         public Vector(Vector vector)
         {
             n = vector.n;
-            Components = vector.Components;
+
+            double[] array = new double[n];
+
+            for (int i = 0; i < vector.Components.Length; i++)
+            {
+                array[i] = vector.Components[i];
+            }
+
+            Components = array;
         }
 
         public Vector(double[] array)
@@ -133,7 +141,7 @@ namespace VectorTask
             return new Vector(array);
         }
 
-        public Vector GetMultiplication(double scalar)
+        public void GetMultiplicationByScalar(double scalar)
         {
             double[] array = new double[n];
 
@@ -142,7 +150,7 @@ namespace VectorTask
                 array[i] = Components[i] * scalar;
             }
 
-            return new Vector(array);
+            Components = array;
         }
 
         public void GetReverse()
