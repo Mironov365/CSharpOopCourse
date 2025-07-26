@@ -81,11 +81,11 @@ public class Matrix
         {
             if (i == m - 1)
             {
-                stringBuilder.Append("{ " + string.Join(", ", Values[i].Components) + " }}");
+                stringBuilder.Append("{ " + string.Join(", ", Values[i]) + " }}");
                 continue;
             }
 
-            stringBuilder.Append("{ " + string.Join(", ", Values[i].Components) + " }, ");
+            stringBuilder.Append("{ " + string.Join(", ", Values[i]) + " }, ");
         }
 
         return stringBuilder.ToString();
@@ -118,7 +118,7 @@ public class Matrix
 
             for (int i = 0; i < vector.GetSize(); i++)
             {
-                array[i] = vector.Components[i];
+                array[i] = vector[i];
             }
 
             vector = new Vector(array);
@@ -136,7 +136,7 @@ public class Matrix
 
         for (int i = 0; i < m; i++)
         {
-            array[i] = Values[i].GetComponent(column);
+            array[i] = Values[i][column];
         }
 
         return new Vector(array);
@@ -170,13 +170,13 @@ public class Matrix
     {
         for (int i = 0; i < m; i++)
         {
-            Values[i].multiplicateByScalar(scalar);
+            Values[i].MultiplicateByScalar(scalar);
         }
     }
 
     public double GetElement(int row, int column)
     {
-        return this.Values[row].GetComponent(column);
+        return this.Values[row][column];
     }
 
     public Matrix GetSubMatrix(int row, int column)
@@ -256,7 +256,7 @@ public class Matrix
         {
             for (int j = 0; j < m; j++)
             {
-                array[i, j] = this.GetElement(i, 0) * vector.GetComponent(j);
+                array[i, j] = this.GetElement(i, 0) * vector[j];
             }
         }
 
