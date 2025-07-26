@@ -1,4 +1,4 @@
-﻿namespace ShapesTask;
+﻿namespace ShapesTask.Shapes;
 
 public class Circle : IShape
 {
@@ -12,21 +12,29 @@ public class Circle : IShape
     public override string ToString()
     {
         return $"Круг с радиусом {Radius}";
-    }   
+    }
 
     public override int GetHashCode()
     {
         int prime = 31;
         int hash = 1;
-        hash = prime * hash + (int)Radius;
+        hash = prime * hash + Radius.GetHashCode();
 
         return hash;
     }
 
     public override bool Equals(object? o)
     {
-        if (ReferenceEquals(o, this)) return true;
-        if (ReferenceEquals(o, null) || o.GetType() != GetType()) return false;
+        if (ReferenceEquals(o, this))
+        {
+            return true;
+        }
+
+        if (ReferenceEquals(o, null) || o.GetType() != GetType())
+        {
+            return false;
+        }
+
         Circle circle = (Circle)o;
         return Radius == circle.Radius;
     }
@@ -43,7 +51,7 @@ public class Circle : IShape
 
     public double GetArea()
     {
-        return Math.PI * Math.Pow(Radius, 2);
+        return Math.PI * Radius * Radius;
     }
 
     public double GetPerimeter()

@@ -1,4 +1,4 @@
-﻿namespace ShapesTask;
+﻿namespace ShapesTask.Shapes;
 
 public interface IShape
 {
@@ -9,4 +9,4 @@ public interface IShape
     double GetArea();
 
     double GetPerimeter();
-} 
+}

@@ -1,4 +1,4 @@
-﻿namespace ShapesTask;
+﻿namespace ShapesTask.Shapes;
 
 public class Square : IShape
 {
@@ -13,15 +13,23 @@ public class Square : IShape
     {
         int prime = 31;
         int hash = 1;
-        hash = prime * hash + (int)SideLength;
+        hash = prime * hash + SideLength.GetHashCode();
 
         return hash;
     }
 
     public override bool Equals(object? o)
     {
-        if (ReferenceEquals(o, this)) return true;
-        if (ReferenceEquals(o, null) || o.GetType() != GetType()) return false;
+        if (ReferenceEquals(o, this))
+        {
+            return true;
+        }
+
+        if (ReferenceEquals(o, null) || o.GetType() != GetType())
+        {
+            return false;
+        }
+
         Square square = (Square)o;
         return SideLength == square.SideLength;
     }

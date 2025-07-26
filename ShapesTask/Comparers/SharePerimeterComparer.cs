@@ -1,4 +1,6 @@
-﻿namespace ShapesTask;
+﻿using ShapesTask.Shapes;
+
+namespace ShapesTask.Comparers;
 
 class SharePerimeterComparer : IComparer<IShape>
 {
@@ -14,6 +16,6 @@ class SharePerimeterComparer : IComparer<IShape>
             throw new ArgumentNullException("shape2 must be not null", nameof(shape2));
         }
 
-        return shape2.GetPerimeter().CompareTo(shape1.GetPerimeter());
+        return shape1.GetPerimeter().CompareTo(shape2.GetPerimeter());
     }
 }

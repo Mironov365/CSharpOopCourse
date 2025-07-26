@@ -1,8 +1,9 @@
-﻿namespace ShapesTask;
+﻿namespace ShapesTask.Shapes;
 
 public class Rectangle : IShape
 {
     public double Width { get; set; }
+
     public double Height { get; set; }
 
     public Rectangle(double width, double height)
@@ -15,7 +16,7 @@ public class Rectangle : IShape
     {
         int prime = 31;
         int hash = 1;
-        hash = prime * hash + (int)Width;
+        hash = prime * hash + Width.GetHashCode();
         hash = prime * hash + Height.GetHashCode();
 
         return hash;
@@ -23,15 +24,23 @@ public class Rectangle : IShape
 
     public override bool Equals(object? o)
     {
-        if (ReferenceEquals(o, this)) return true;
-        if (ReferenceEquals(o, null) || o.GetType() != GetType()) return false;
+        if (ReferenceEquals(o, this))
+        {
+            return true;
+        }
+
+        if (ReferenceEquals(o, null) || o.GetType() != GetType())
+        {
+            return false;
+        }
+
         Rectangle rectangle = (Rectangle)o;
         return Height == rectangle.Height && Width == rectangle.Width;
     }
 
     public override string ToString()
     {
-        return $"Прямоугольник со сторонами {Width} и {Height}";
+        return $"Прямоугольник с шириной {Width} и высотой {Height}";
     }
 
     public double GetWidth()
