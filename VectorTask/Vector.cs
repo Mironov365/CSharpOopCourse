@@ -124,7 +124,7 @@ public class Vector
         for (int i = 0; i < vector.GetSize(); i++)
         {
             _components[i] += vector._components[i];
-        }       
+        }
     }
 
     public void Subtract(Vector vector)
@@ -165,7 +165,7 @@ public class Vector
         return Math.Sqrt(result);
     }
 
-    public double this[int index] 
+    public double this[int index]
     {
         get => _components[index];
         set => _components[index] = value;
@@ -188,7 +188,7 @@ public class Vector
     }
 
     public static double GetScalarProduct(Vector vector1, Vector vector2)
-    {        
+    {
         int minVectorSize = Math.Min(vector1.GetSize(), vector2.GetSize());
 
         double result = 0;
