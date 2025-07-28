@@ -16,17 +16,18 @@ public class Triangle : IShape
 
     public Triangle(double x1, double y1, double x2, double y2, double x3, double y3)
     {
-        this.X1 = x1;
-        this.X2 = x2;
-        this.X3 = x3;
-        this.Y1 = y1;
-        this.Y2 = y2;
-        this.Y3 = y3;
+        X1 = x1;
+        X2 = x2;
+        X3 = x3;
+        Y1 = y1;
+        Y2 = y2;
+        Y3 = y3;
     }
 
     public override int GetHashCode()
     {
         const int prime = 31;
+
         int hash = 1;
         hash = prime * hash + X1.GetHashCode();
         hash = prime * hash + X2.GetHashCode();

@@ -15,6 +15,7 @@ public class Rectangle : IShape
     public override int GetHashCode()
     {
         const int prime = 31;
+
         int hash = 1;
         hash = prime * hash + Width.GetHashCode();
         hash = prime * hash + Height.GetHashCode();

@@ -73,7 +73,7 @@ internal class Program
         Console.WriteLine();
 
         Console.WriteLine("Изменение вектора-строки матрицы 3 по индексу 1:");            
-        matrix3.ChangeRow(1, new Vector(new double[2] { 2, 1 }));
+        matrix3.SetRow(1, new Vector(new double[2] { 2, 1 }));
         Console.WriteLine(matrix3);
         Console.WriteLine();
 
@@ -82,12 +82,12 @@ internal class Program
         Console.WriteLine();
 
         Console.WriteLine("Транспонирование матрицы 5:");
-        matrix5.DoTransposition();
+        matrix5.Transpose();
         Console.WriteLine(matrix5);
         Console.WriteLine();
 
         Console.WriteLine("Умножение матрицы 5 на скаляр 5:");
-        matrix5.DoMultiplicationByScalar(5);
+        matrix5.MultiplyByScalar(5);
         Console.WriteLine(matrix5);
         Console.WriteLine();
 
@@ -100,7 +100,7 @@ internal class Program
         Console.WriteLine();
 
         Console.WriteLine("Умножение матрицы 7 на вектор :");
-        Console.WriteLine(matrix7.GetMultiplicationByVector(vector));            
+        Console.WriteLine(matrix7.MultiplyByVector(vector));            
         Console.WriteLine();
 
         Console.WriteLine("Сложение матриц 3 и 4:");
@@ -112,16 +112,16 @@ internal class Program
         Console.WriteLine();
 
         Console.WriteLine("Сложение матриц 3 и 4 статическое:");
-        Console.WriteLine(Matrix.MatrixSum(matrix3, matrix4));
+        Console.WriteLine(Matrix.GetSum(matrix3, matrix4));
         Console.WriteLine();
 
         Console.WriteLine("Вычитание матриц 3 и 4 статическое:");
-        Console.WriteLine(Matrix.MatrixSubtraction(matrix3, matrix4));
+        Console.WriteLine(Matrix.GetDifference(matrix3, matrix4));
         Console.WriteLine();
 
         Console.WriteLine("Умножение матриц 2 и 3 статическое:");
-        matrix5.DoTransposition();
-        Console.WriteLine(Matrix.MatrixMultiplication(matrix2, matrix5));
+        matrix5.Transpose();
+        Console.WriteLine(Matrix.GetProduct(matrix2, matrix5));
         Console.WriteLine();
     }
 }
