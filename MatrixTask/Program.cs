@@ -42,7 +42,7 @@ internal class Program
 
         Vector vector = new Vector(oneDimensionalArray1);
 
-        Vector[] vectorsArray = new Vector[2] {new Vector(oneDimensionalArray1), new Vector(oneDimensionalArray2) };
+        Vector[] vectorsArray = new Vector[] { new Vector(oneDimensionalArray1), new Vector(oneDimensionalArray2) };
 
         Matrix matrix1 = new Matrix(4, 3);
         Matrix matrix2 = new Matrix(twoDimensionalArray1);
@@ -65,15 +65,15 @@ internal class Program
         Console.WriteLine("Проверка методов:");
 
         Console.WriteLine("Получение размера матрицы 1:");
-        Console.WriteLine(matrix1.GetSize()[0]+ ", " + matrix1.GetSize()[1]);
+        Console.WriteLine(matrix1.GetSize());
         Console.WriteLine();
 
         Console.WriteLine("Получение вектора-строки матрицы 3 по индексу 1:");
         Console.WriteLine(matrix3.GetRow(1));
         Console.WriteLine();
 
-        Console.WriteLine("Изменение вектора-строки матрицы 3 по индексу 1:");            
-        matrix3.SetRow(1, new Vector(new double[2] { 2, 1 }));
+        Console.WriteLine("Изменение вектора-строки матрицы 3 по индексу 1 на { 2, 1, 10}:");
+        matrix3.SetRow(1, new Vector(new double[] { 2, 1, 10 }));
         Console.WriteLine(matrix3);
         Console.WriteLine();
 
@@ -99,16 +99,18 @@ internal class Program
         Console.WriteLine(matrix6.GetDeterminant());
         Console.WriteLine();
 
-        Console.WriteLine("Умножение матрицы 7 на вектор :");
-        Console.WriteLine(matrix7.MultiplyByVector(vector));            
+        Console.WriteLine($"Умножение матрицы 7 {matrix6} на вектор {vector}:");
+        Console.WriteLine(matrix6.MultiplyByVector(vector));
         Console.WriteLine();
 
         Console.WriteLine("Сложение матриц 3 и 4:");
-        Console.WriteLine(matrix3.GetSum(matrix4));
+        matrix3.Add(matrix4);
+        Console.WriteLine(matrix3);
         Console.WriteLine();
 
         Console.WriteLine("Вычитание матриц 3 и 4:");
-        Console.WriteLine(matrix3.GetSubtraction(matrix4));
+        matrix3.Subtract(matrix4);
+        Console.WriteLine(matrix3);
         Console.WriteLine();
 
         Console.WriteLine("Сложение матриц 3 и 4 статическое:");

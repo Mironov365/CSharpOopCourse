@@ -1,5 +1,4 @@
-﻿using System;
-using System.Text;
+﻿using System.Text;
 using VectorTask;
 
 namespace MatrixTask;
@@ -12,25 +11,25 @@ public class Matrix
 
     private int _columnsCount;
 
-    public Matrix(int m, int n)
+    public Matrix(int rows, int columns)
     {
-        if (m <= 0)
+        if (rows <= 0)
         {
-            throw new ArgumentException($"Number of matrix rows {m} must be > 0", nameof(m));
+            throw new ArgumentException($"Rows count {rows} must be > 0", nameof(rows));
         }
 
-        if (n <= 0)
+        if (columns <= 0)
         {
-            throw new ArgumentException($"Number of matrix columns {n} must be > 0", nameof(n));
+            throw new ArgumentException($"Columns count {columns} must be > 0", nameof(columns));
         }
 
-        _rowsCount = m;
-        _columnsCount = n;
-        Rows = new Vector[m];
+        _rowsCount = rows;
+        _columnsCount = columns;
+        Rows = new Vector[rows];
 
-        for (int i = 0; i < m; i++)
+        for (int i = 0; i < rows; i++)
         {
-            Rows[i] = new Vector(n);
+            Rows[i] = new Vector(columns);
         }
     }
 
@@ -85,13 +84,21 @@ public class Matrix
             throw new ArgumentNullException(nameof(array));
         }
 
+        for (int i = 0; i < array.Length - 2; i++)
+        {
+            if (array[i].GetSize() != array[i + 1].GetSize())
+            {
+                throw new ArgumentException($"Size of array's vectors must be same", nameof(array));
+            }
+        }
+
         _rowsCount = array.GetUpperBound(0) + 1;
         _columnsCount = array[0].GetSize();
         Rows = new Vector[_rowsCount];
 
         for (int i = 0; i < _rowsCount; i++)
         {
-            Rows[i] = array[i];
+            Rows[i] = new Vector(array[i]);
         }
     }
 
@@ -99,35 +106,93 @@ public class Matrix
     {
         StringBuilder stringBuilder = new StringBuilder("{");
 
-        for (int i = 0; i < _rowsCount; i++)
+        for (int i = 0; i < _rowsCount - 1; i++)
         {
-            if (i == _rowsCount - 1)
-            {
-                stringBuilder.Append("{ " + string.Join(", ", Rows[i]) + " }}");
-                continue;
-            }
-
-            stringBuilder.Append("{ " + string.Join(", ", Rows[i]) + " }, ");
+            stringBuilder.Append($"{Rows[i]}, ");
         }
 
+        stringBuilder.Append($"{Rows[_rowsCount - 1]}}}");
+
         return stringBuilder.ToString();
+    }
+
+    public override int GetHashCode()
+    {
+        int prime = 31;
+        int hash = 1;
+
+        hash = prime * hash + _rowsCount.GetHashCode();
+        hash = prime * hash + _columnsCount.GetHashCode();
+
+        for (int i = 0; i < _rowsCount; i++)
+        {
+            for (int j = 0; j < _columnsCount; i++)
+            {
+                hash = prime * hash + Rows[i][j].GetHashCode();
+            }
+        }
+
+        return hash;
+    }
+
+    public override bool Equals(object? o)
+    {
+        if (ReferenceEquals(o, this))
+        {
+            return true;
+        }
+
+        if (ReferenceEquals(o, null) || o.GetType() != GetType())
+        {
+            return false;
+        }
+
+        Matrix matrix = (Matrix)o;
+
+        if (_rowsCount != matrix._rowsCount)
+        {
+            return false;
+        }
+
+        if (_columnsCount != matrix._columnsCount)
+        {
+            return false;
+        }
+
+        for (int i = 0; i < _rowsCount; i++)
+        {
+            for (int j = 0; j < _columnsCount; i++)
+            {
+                if (Rows[i][j] != matrix.Rows[i][j])
+                {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+
+    public string GetSize()
+    {
+        return $"{_rowsCount}x{_columnsCount}";
     }
 
     public Vector GetRow(int row)
     {
         if (row < 0 || row >= _rowsCount)
         {
-            throw new ArgumentException($"Row {row} must be >= 0 and < {_rowsCount}", nameof(row));
+            throw new ArgumentException($"Row index {row} must be >= 0 and < {_rowsCount}", nameof(row));
         }
 
-        return Rows[row];
+        return new Vector(Rows[row]);
     }
 
     public void SetRow(int row, Vector vector)
     {
         if (row < 0 || row >= _rowsCount)
         {
-            throw new ArgumentException($"Row {row} must be >= 0 and < {_rowsCount}", nameof(row));
+            throw new ArgumentException($"Row index {row} must be >= 0 and < {_rowsCount}", nameof(row));
         }
 
         if (vector.GetSize() != _columnsCount)
@@ -142,9 +207,9 @@ public class Matrix
 
     public Vector GetColumn(int column)
     {
-        if (column <= 0 || column >= _columnsCount)
+        if (column < 0 || column >= _columnsCount)
         {
-            throw new ArgumentException($"Column {column} must be > 0 and < {_columnsCount}", nameof(column));
+            throw new ArgumentException($"Column index {column} must be >= 0 and < {_columnsCount}", nameof(column));
         }
 
         double[] array = new double[_rowsCount];
@@ -159,25 +224,18 @@ public class Matrix
 
     public void Transpose()
     {
-        int newN = _rowsCount;
-        int newM = _columnsCount;
+        int newColumns = _rowsCount;
+        int newRows = _columnsCount;
 
         Vector[] vectorsArray = new Vector[_columnsCount];
 
         for (int i = 0; i < _columnsCount; i++)
         {
-            double[] array = new double[_rowsCount];
-
-            for (int j = 0; j < _rowsCount; j++)
-            {
-                array[j] = Rows[i][j];
-            }
-
-            vectorsArray[i] = new Vector(array);
+            vectorsArray[i] = GetColumn(i);
         }
 
-        _columnsCount = newN;
-        _rowsCount = newM;
+        _columnsCount = newColumns;
+        _rowsCount = newRows;
         Rows = vectorsArray;
     }
 
@@ -189,15 +247,18 @@ public class Matrix
         }
     }
 
-    /* 
-     * public double GetElement(int row, int column)
-    {
-        return Rows[row][column];
-    }
-    */
-
     private Matrix GetSubMatrix(int rowIndex, int columnIndex)
     {
+        if (rowIndex > _rowsCount)
+        {
+            throw new ArgumentException($"Row index {rowIndex} must be <= count of matrix rows {_rowsCount}", nameof(rowIndex));
+        }
+
+        if (columnIndex > _columnsCount)
+        {
+            throw new ArgumentException($"Column index {columnIndex} must be <= count of matrix columns {_columnsCount}", nameof(columnIndex));
+        }
+
         double[,] array = new double[_rowsCount - 1, _columnsCount - 1];
 
         int tempRowIndex = 0;
@@ -250,70 +311,56 @@ public class Matrix
 
         for (int i = 0; i < _columnsCount; i++)
         {
-            determinant += Math.Pow(-1, i) * Rows[i][0] * this.GetSubMatrix(i, 0).GetDeterminant();
+            determinant += Math.Pow(-1, i) * Rows[i][0] * GetSubMatrix(i, 0).GetDeterminant();
         }
 
         return determinant;
     }
 
-    public Matrix MultiplyByVector(Vector vector)
+    public Vector MultiplyByVector(Vector vector)
     {
-        if (_columnsCount != 1)
+        if (_columnsCount != vector.GetSize())
         {
-            throw new ArgumentException("Columns count must be 1", nameof(_columnsCount));
+            throw new ArgumentException($"Vector size {vector.GetSize()} must be equal to columns count {_columnsCount}", nameof(vector));
         }
 
-        double[,] array = new double[_rowsCount, _rowsCount];
-
-        for (int i = 0; i < _rowsCount; i++)
-        {
-            for (int j = 0; j < _rowsCount; j++)
-            {
-                array[i, j] = Rows[i][0] * vector[j];
-            }
-        }
-
-        return new Matrix(array);
-    }
-
-    public Matrix GetSum(Matrix matrix)
-    {
-        if (_columnsCount != matrix._columnsCount || _rowsCount != matrix._rowsCount)
-        {
-            throw new ArgumentException("Matrices size must be same");
-        }
-
-        double[,] array = new double[_rowsCount, _columnsCount];
+        double[] array = new double[_columnsCount];
 
         for (int i = 0; i < _rowsCount; i++)
         {
             for (int j = 0; j < _columnsCount; j++)
             {
-                array[i, j] = Rows[i][j] + matrix.Rows[i][j];
+                array[i] += Rows[i][j] * vector[j];
             }
         }
 
-        return new Matrix(array);
+        return new Vector(array);
     }
 
-    public Matrix GetSubtraction(Matrix matrix)
+    public void Add(Matrix matrix)
     {
         if (_columnsCount != matrix._columnsCount || _rowsCount != matrix._rowsCount)
         {
-            throw new ArgumentException("Matrices size must be same");
+            throw new ArgumentException($"Matrices size must be same", nameof(matrix));
         }
-
-        double[,] array = new double[_rowsCount, _columnsCount];
 
         for (int i = 0; i < _rowsCount; i++)
         {
-            for (int j = 0; j < _columnsCount; j++)
-            {
-                array[i, j] = Rows[i][j] - matrix.Rows[i][j];
-            }
+            Rows[i].Add(matrix.Rows[i]);
+        }
+    }
+
+    public void Subtract(Matrix matrix)
+    {
+        if (_columnsCount != matrix._columnsCount || _rowsCount != matrix._rowsCount)
+        {
+            throw new ArgumentException($"Matrices size must be same", nameof(matrix));
         }
 
-        return new Matrix(array);
+        for (int i = 0; i < _rowsCount; i++)
+        {
+            Rows[i].Subtract(matrix.Rows[i]);
+        }
     }
 
     public static Matrix GetSum(Matrix matrix1, Matrix matrix2)
@@ -323,17 +370,11 @@ public class Matrix
             throw new ArgumentException("Matrices size must be same");
         }
 
-        double[,] array = new double[matrix1._rowsCount, matrix1._columnsCount];
+        Matrix matrix = new(matrix1);
 
-        for (int i = 0; i < matrix1._rowsCount; i++)
-        {
-            for (int j = 0; j < matrix1._columnsCount; j++)
-            {
-                array[i, j] = matrix1.Rows[i][j] + matrix2.Rows[i][j];
-            }
-        }
+        matrix.Add(matrix2);
 
-        return new Matrix(array);
+        return matrix;
     }
 
     public static Matrix GetDifference(Matrix matrix1, Matrix matrix2)
@@ -343,24 +384,18 @@ public class Matrix
             throw new ArgumentException("Matrices size must be same");
         }
 
-        double[,] array = new double[matrix1._rowsCount, matrix1._columnsCount];
+        Matrix matrix = new(matrix1);
 
-        for (int i = 0; i < matrix1._rowsCount; i++)
-        {
-            for (int j = 0; j < matrix1._columnsCount; j++)
-            {
-                array[i, j] = matrix1.Rows[i][j] - matrix2.Rows[i][j];
-            }
-        }
+        matrix.Subtract(matrix2);
 
-        return new Matrix(array);
+        return matrix;
     }
 
     public static Matrix GetProduct(Matrix matrix1, Matrix matrix2)
     {
         if (matrix1._columnsCount != matrix2._rowsCount)
         {
-            throw new ArgumentException("COunt of columns in the first matrix must be equal to the count of rows in the second matrix");
+            throw new ArgumentException("Count of columns in the first matrix must be equal to the count of rows in the second matrix");
         }
 
         double[,] array = new double[matrix1._rowsCount, matrix2._columnsCount];
