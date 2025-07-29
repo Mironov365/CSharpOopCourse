@@ -22,14 +22,14 @@ internal class Program
         Array.Sort(shapesArray, new ShareAreaComparer());
 
         Console.WriteLine("Фигура с наибольшей площадью:");
-        Console.WriteLine($"Фигура: {shapesArray[0]}");
-        Console.WriteLine($"Площадь: {shapesArray[0].GetArea()}");
+        Console.WriteLine($"Фигура: {shapesArray[shapesArray.Length - 1]}");
+        Console.WriteLine($"Площадь: {shapesArray[shapesArray.Length - 1].GetArea()}");
 
         Array.Sort(shapesArray, new SharePerimeterComparer());
 
         Console.WriteLine();
         Console.WriteLine("Фигура с вторым наибольшим периметром:");
-        Console.WriteLine($"Фигура: {shapesArray[1]}");
-        Console.WriteLine($"Периметр: {shapesArray[1].GetPerimeter()}");
+        Console.WriteLine($"Фигура: {shapesArray[shapesArray.Length - 2]}");
+        Console.WriteLine($"Периметр: {shapesArray[shapesArray.Length - 2].GetPerimeter()}");
     }
 }
