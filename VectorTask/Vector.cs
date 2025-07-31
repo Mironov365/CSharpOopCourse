@@ -1,84 +1,77 @@
-﻿using System.Numerics;
-
-namespace VectorTask;
+﻿namespace VectorTask;
 
 public class Vector
 {
     private double[] _components;
 
-    public Vector(int n)
+    public int Size;
+
+    public Vector(int size)
     {
-        if (n <= 0)
+        if (size <= 0)
         {
-            throw new ArgumentException($"Vector size {n} must be > 0", nameof(n));
+            throw new ArgumentException($"Vector size {size} must be > 0", nameof(size));
         }
 
-        _components = new double[n];
+        _components = new double[size];
+        Size = size;
     }
 
     public Vector(Vector vector)
     {
-        double[] array = new double[vector.GetSize()];
+        _components = new double[vector.Size];
 
-        Array.Copy(vector._components, array, array.Length);
+        Array.Copy(vector._components, _components, _components.Length);
 
-        _components = array;
+        Size = _components.Length;
     }
 
     public Vector(double[] array)
     {
-        if (array is null)
-        {
-            throw new ArgumentNullException(nameof(array));
-        }
+        ArgumentNullException.ThrowIfNull(array);
 
         if (array.Length == 0)
         {
-            throw new ArgumentException($"Array minVectorSize {array.Length} must be > 0", nameof(array));
+            throw new ArgumentException($"Array length {array.Length} must be > 0", nameof(array));
         }
 
         _components = new double[array.Length];
 
         Array.Copy(array, _components, array.Length);
+        Size = array.Length;
     }
 
-    public Vector(int n, double[] array)
+    public Vector(int size, double[] array)
     {
-        if (array is null)
+        ArgumentNullException.ThrowIfNull(array);
+
+        if (size <= 0)
         {
-            throw new ArgumentNullException(nameof(array));
+            throw new ArgumentException($"New resultVector size {size} must be > 0", nameof(size));
         }
 
-        if (n < array.Length)
-        {
-            throw new ArgumentException($"New vector size {n} must be >= minVectorSize of array {array.Length}", nameof(n)); ;
-        }
+        _components = new double[size];
 
-        _components = new double[n];
-
-        Array.Copy(array, _components, array.Length);
-    }
-
-    public int GetSize()
-    {
-        return _components.Length;
+        Array.Copy(array, _components, Math.Min(array.Length, size));
+        Size = size;
     }
 
     public override string ToString()
     {
-        string vector = string.Join(", ", _components);
-
-        return $"{{{vector}}}";
+        return $"{{{string.Join(", ", _components)}}}";
     }
 
     public override int GetHashCode()
     {
-        int prime = 31;
+        const int prime = 31;
+
         int hash = 1;
 
-        foreach (double e in _components)
+        hash = prime * hash + Size.GetHashCode();
+
+        foreach (double component in _components)
         {
-            hash = prime * hash + e.GetHashCode();
+            hash = prime * hash + component.GetHashCode();
         }
 
         return hash;
@@ -98,7 +91,7 @@ public class Vector
 
         Vector vector = (Vector)o;
 
-        if (_components.Length != vector.GetSize())
+        if (_components.Length != vector.Size)
         {
             return false;
         }
@@ -116,12 +109,12 @@ public class Vector
 
     public void Add(Vector vector)
     {
-        if (_components.Length < vector.GetSize())
+        if (_components.Length < vector.Size)
         {
-            Array.Resize(ref _components, vector.GetSize());
+            Array.Resize(ref _components, vector.Size);
         }
 
-        for (int i = 0; i < vector.GetSize(); i++)
+        for (int i = 0; i < vector.Size; i++)
         {
             _components[i] += vector._components[i];
         }
@@ -129,12 +122,12 @@ public class Vector
 
     public void Subtract(Vector vector)
     {
-        if (_components.Length < vector.GetSize())
+        if (_components.Length < vector.Size)
         {
-            Array.Resize(ref _components, vector.GetSize());
+            Array.Resize(ref _components, vector.Size);
         }
 
-        for (int i = 0; i < vector.GetSize(); i++)
+        for (int i = 0; i < vector.Size; i++)
         {
             _components[i] -= vector._components[i];
         }
@@ -155,14 +148,14 @@ public class Vector
 
     public double GetLength()
     {
-        double result = 0;
+        double temp = 0;
 
         foreach (double component in _components)
         {
-            result += component * component;
+            temp += component * component;
         }
 
-        return Math.Sqrt(result);
+        return Math.Sqrt(temp);
     }
 
     public double this[int index]
@@ -173,29 +166,29 @@ public class Vector
 
     public static Vector GetSum(Vector vector1, Vector vector2)
     {
-        Vector vector = new Vector(vector1);
-        vector.Add(vector2);
+        Vector resultVector = new Vector(vector1);
+        resultVector.Add(vector2);
 
-        return vector;
+        return resultVector;
     }
 
     public static Vector GetDifference(Vector vector1, Vector vector2)
     {
-        Vector vector = new Vector(vector1);
-        vector.Subtract(vector2);
+        Vector resultVector = new Vector(vector1);
+        resultVector.Subtract(vector2);
 
-        return vector;
+        return resultVector;
     }
 
     public static double GetScalarProduct(Vector vector1, Vector vector2)
     {
-        int minVectorSize = Math.Min(vector1.GetSize(), vector2.GetSize());
+        int minVectorSize = Math.Min(vector1.Size, vector2.Size);
 
         double result = 0;
 
         for (int i = 0; i < minVectorSize; i++)
         {
-            result += vector1[i] * vector2[i];
+            result += vector1._components[i] * vector2._components[i];
         }
 
         return result;

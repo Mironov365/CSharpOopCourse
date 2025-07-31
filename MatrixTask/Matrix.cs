@@ -86,14 +86,14 @@ public class Matrix
 
         for (int i = 0; i < array.Length - 2; i++)
         {
-            if (array[i].GetSize() != array[i + 1].GetSize())
+            if (array[i].Size() != array[i + 1].Size())
             {
                 throw new ArgumentException($"Size of array's vectors must be same", nameof(array));
             }
         }
 
         _rowsCount = array.GetUpperBound(0) + 1;
-        _columnsCount = array[0].GetSize();
+        _columnsCount = array[0].Size();
         Rows = new Vector[_rowsCount];
 
         for (int i = 0; i < _rowsCount; i++)
@@ -195,7 +195,7 @@ public class Matrix
             throw new ArgumentException($"Row index {row} must be >= 0 and < {_rowsCount}", nameof(row));
         }
 
-        if (vector.GetSize() != _columnsCount)
+        if (vector.Size() != _columnsCount)
         {
             throw new ArgumentException($"Vector size must be = {_columnsCount}", nameof(vector));
         }
@@ -319,9 +319,9 @@ public class Matrix
 
     public Vector MultiplyByVector(Vector vector)
     {
-        if (_columnsCount != vector.GetSize())
+        if (_columnsCount != vector.Size())
         {
-            throw new ArgumentException($"Vector size {vector.GetSize()} must be equal to columns count {_columnsCount}", nameof(vector));
+            throw new ArgumentException($"Vector size {vector.Size()} must be equal to columns count {_columnsCount}", nameof(vector));
         }
 
         double[] array = new double[_columnsCount];

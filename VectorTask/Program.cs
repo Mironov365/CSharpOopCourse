@@ -26,10 +26,10 @@ internal class Program
         Console.WriteLine(vector4);
         Console.WriteLine(vector5);
 
-        Console.WriteLine(vector1.GetSize());
-        Console.WriteLine(vector2.GetSize());
-        Console.WriteLine(vector3.GetSize());
-        Console.WriteLine(vector4.GetSize());
+        Console.WriteLine(vector1.Size);
+        Console.WriteLine(vector2.Size);
+        Console.WriteLine(vector3.Size);
+        Console.WriteLine(vector4.Size);
         Console.WriteLine();
 
         Console.WriteLine("Проверка нестатических методов");
