@@ -4,7 +4,7 @@ public class Vector
 {
     private double[] _components;
 
-    private int Size {  get; set; }
+    public int Size { get; private set; }
 
     public Vector(int size)
     {
