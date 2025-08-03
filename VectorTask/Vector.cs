@@ -4,7 +4,10 @@ public class Vector
 {
     private double[] _components;
 
-    public int Size { get; private set; }
+    public int Size
+    {
+        get { return _components.Length; }
+    }
 
     public Vector(int size)
     {
@@ -14,7 +17,6 @@ public class Vector
         }
 
         _components = new double[size];
-        Size = size;
     }
 
     public Vector(Vector vector)
@@ -22,8 +24,6 @@ public class Vector
         _components = new double[vector.Size];
 
         Array.Copy(vector._components, _components, _components.Length);
-
-        Size = _components.Length;
     }
 
     public Vector(double[] array)
@@ -32,14 +32,12 @@ public class Vector
 
         if (array.Length == 0)
         {
-            throw new ArgumentException($"Array length ({array.Length}) must be > 0", nameof(array));
+            throw new ArgumentException($"Array length must be > 0. Array length: {array.Length}", nameof(array));
         }
 
         _components = new double[array.Length];
 
         Array.Copy(array, _components, array.Length);
-
-        Size = _components.Length;
     }
 
     public Vector(int size, double[] array)
@@ -48,14 +46,12 @@ public class Vector
 
         if (size <= 0)
         {
-            throw new ArgumentException($"Vector size ({size}) must be > 0", nameof(size));
+            throw new ArgumentException($"Vector size must be > 0. Size: {size}", nameof(size));
         }
 
         _components = new double[size];
 
         Array.Copy(array, _components, Math.Min(array.Length, size));
-
-        Size = size;
     }
 
     public override string ToString()
@@ -120,8 +116,6 @@ public class Vector
         {
             _components[i] += vector._components[i];
         }
-
-        Size = _components.Length;
     }
 
     public void Subtract(Vector vector)
@@ -135,8 +129,6 @@ public class Vector
         {
             _components[i] -= vector._components[i];
         }
-
-        Size = _components.Length;
     }
 
     public void MultiplyByScalar(double scalar)
