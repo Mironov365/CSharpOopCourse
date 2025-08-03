@@ -1,6 +1,0 @@
-seq,name/first,name/last,age,street,city,state,zip,dollar,pick,date
-1,Lora,Sanchez,23,Taviti Path,Itulbic,KS,69099,$7255.36,YELLOW,05/20/1919
-2,Mary,Hale,52,Zuzgif Glen,Pojkilzib,NV,27805,$8511.02,RED,01/14/1905
-3,Roxie,Bishop,61,Buzse View,Vesgeztu,WV,57223,$4192.22,RED,06/01/1918
-4,Alexander,Knight,58,Ulpak Center,Sanubub,MO,73412,$9476.08,RED,10/13/2010
-5,Dollie,Parker,39,Juvleb Key,Ofgize,KS,33682,$5008.20,BLUE,08/05/2039
