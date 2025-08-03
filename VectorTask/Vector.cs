@@ -4,13 +4,13 @@ public class Vector
 {
     private double[] _components;
 
-    public int Size;
+    private int Size {  get; set; }
 
     public Vector(int size)
     {
         if (size <= 0)
         {
-            throw new ArgumentException($"Vector size {size} must be > 0", nameof(size));
+            throw new ArgumentException($"Vector size must be > 0. Size: {size}", nameof(size));
         }
 
         _components = new double[size];
@@ -32,13 +32,14 @@ public class Vector
 
         if (array.Length == 0)
         {
-            throw new ArgumentException($"Array length {array.Length} must be > 0", nameof(array));
+            throw new ArgumentException($"Array length ({array.Length}) must be > 0", nameof(array));
         }
 
         _components = new double[array.Length];
 
         Array.Copy(array, _components, array.Length);
-        Size = array.Length;
+
+        Size = _components.Length;
     }
 
     public Vector(int size, double[] array)
@@ -47,12 +48,13 @@ public class Vector
 
         if (size <= 0)
         {
-            throw new ArgumentException($"New resultVector size {size} must be > 0", nameof(size));
+            throw new ArgumentException($"Vector size ({size}) must be > 0", nameof(size));
         }
 
         _components = new double[size];
 
         Array.Copy(array, _components, Math.Min(array.Length, size));
+
         Size = size;
     }
 
@@ -118,6 +120,8 @@ public class Vector
         {
             _components[i] += vector._components[i];
         }
+
+        Size = _components.Length;
     }
 
     public void Subtract(Vector vector)
@@ -131,6 +135,8 @@ public class Vector
         {
             _components[i] -= vector._components[i];
         }
+
+        Size = _components.Length;
     }
 
     public void MultiplyByScalar(double scalar)
@@ -148,14 +154,14 @@ public class Vector
 
     public double GetLength()
     {
-        double temp = 0;
+        double sum = 0;
 
         foreach (double component in _components)
         {
-            temp += component * component;
+            sum += component * component;
         }
 
-        return Math.Sqrt(temp);
+        return Math.Sqrt(sum);
     }
 
     public double this[int index]
