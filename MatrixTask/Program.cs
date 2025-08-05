@@ -13,14 +13,14 @@ internal class Program
         };
 
         double[,] twoDimensionalArray2 =
-       {
+        {
             { 5, 6, 7 },
             { 3, 4, 8 },
             { 5, 4, 3 }
         };
 
         double[,] twoDimensionalArray3 =
-{
+        {
             { 5, 6, 7, 5, 8 },
             { 3, 4, 8, 4, 3 },
             { 5, 4, 3, 5, 2 },
@@ -29,7 +29,7 @@ internal class Program
         };
 
         double[,] twoDimensionalArray4 =
-{
+        {
             { 5 },
             { 3 },
             { 5 },
@@ -40,9 +40,13 @@ internal class Program
         double[] oneDimensionalArray1 = { 4, 6, 8, 10, 11 };
         double[] oneDimensionalArray2 = { 5, 4, 10, 3, 8 };
 
-        Vector vector = new Vector(oneDimensionalArray1);
+        Vector vector = new(oneDimensionalArray1);
 
-        Vector[] vectorsArray = new Vector[] { new Vector(oneDimensionalArray1), new Vector(oneDimensionalArray2) };
+        Vector[] vectorsArray =
+        {
+            new(oneDimensionalArray1),
+            new(oneDimensionalArray2)
+        };
 
         Matrix matrix1 = new Matrix(4, 3);
         Matrix matrix2 = new Matrix(twoDimensionalArray1);
@@ -63,10 +67,6 @@ internal class Program
         Console.WriteLine();
 
         Console.WriteLine("Проверка методов:");
-
-        Console.WriteLine("Получение размера матрицы 1:");
-        Console.WriteLine(matrix1.GetSize());
-        Console.WriteLine();
 
         Console.WriteLine("Получение вектора-строки матрицы 3 по индексу 1:");
         Console.WriteLine(matrix3.GetRow(1));
