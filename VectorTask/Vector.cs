@@ -4,10 +4,7 @@ public class Vector
 {
     private double[] _components;
 
-    public int Size
-    {
-        get { return _components.Length; }
-    }
+    public int Size => _components.Length;    
 
     public Vector(int size)
     {

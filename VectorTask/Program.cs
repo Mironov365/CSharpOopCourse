@@ -28,7 +28,7 @@ internal class Program
 
         Console.WriteLine(vector1.Size);
         Console.WriteLine(vector2.Size);
-        Console.WriteLine(vector3.Size);
+        Console.WriteLine(vector3.Size);        
         Console.WriteLine(vector4.Size);
         Console.WriteLine();
 
