@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MatrixTask", "MatrixTask\Ma
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VectorTask", "VectorTask\VectorTask.csproj", "{D21BEDF4-12BA-4652-9F94-CB493EFF6C65}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ListTask", "ListTask\ListTask.csproj", "{8C4B69D2-A971-49D5-9D85-1C330EB55FA7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,8 +35,15 @@ Global
 		{D21BEDF4-12BA-4652-9F94-CB493EFF6C65}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D21BEDF4-12BA-4652-9F94-CB493EFF6C65}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D21BEDF4-12BA-4652-9F94-CB493EFF6C65}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8C4B69D2-A971-49D5-9D85-1C330EB55FA7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8C4B69D2-A971-49D5-9D85-1C330EB55FA7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8C4B69D2-A971-49D5-9D85-1C330EB55FA7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8C4B69D2-A971-49D5-9D85-1C330EB55FA7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {4E2960E0-491F-4510-81EA-79625E0006DB}
 	EndGlobalSection
 EndGlobal
