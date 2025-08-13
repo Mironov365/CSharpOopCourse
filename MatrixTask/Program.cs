@@ -68,6 +68,12 @@ internal class Program
 
         Console.WriteLine("Проверка методов:");
 
+        Console.WriteLine("Проверка равенсва векторов 3 и 4:");
+        Console.WriteLine(matrix3.Equals(matrix4));
+        Console.WriteLine("Проверка равенсва векторов 3 и 5:");
+        Console.WriteLine(matrix3.Equals(matrix5));
+        Console.WriteLine();
+
         Console.WriteLine("Получение вектора-строки матрицы 3 по индексу 1:");
         Console.WriteLine(matrix3.GetRow(1));
         Console.WriteLine();

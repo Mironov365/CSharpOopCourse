@@ -12,20 +12,16 @@ public class Matrix
 
     public int ColumnsCount => _rows[0].Size;
 
-    //private int RowsCount;
-
-    //private int ColumnsCount;
-
     public Matrix(int rowsCount, int columnsCount)
     {
         if (rowsCount <= 0)
         {
-            throw new ArgumentOutOfRangeException($"Rows count must be > 0. Rows count: {rowsCount}", nameof(rowsCount));
+            throw new ArgumentOutOfRangeException(nameof(rowsCount), $"Rows count must be > 0. Rows count: {rowsCount}");
         }
 
         if (columnsCount <= 0)
         {
-            throw new ArgumentOutOfRangeException($"Columns count must be > 0. Columns count: {columnsCount}", nameof(columnsCount));
+            throw new ArgumentOutOfRangeException(nameof(columnsCount), $"Columns count must be > 0. Columns count: {columnsCount}");
         }
 
         _rows = new Vector[rowsCount];
@@ -62,21 +58,14 @@ public class Matrix
 
         _rows = new Vector[rowsCount];
 
-        double[][] matrix = new double[rowsCount][];
-
         for (int i = 0; i < rowsCount; i++)
         {
-            matrix[i] = new double[columnsCount];
+            _rows[i] = new Vector(columnsCount);
 
             for (int j = 0; j < columnsCount; j++)
             {
-                matrix[i][j] = array[i, j];
+                _rows[i][j] = array[i, j];
             }
-        }
-
-        for (int i = 0; i < rowsCount; i++)
-        {
-            _rows[i] = new Vector(matrix[i]);
         }
     }
 
@@ -91,11 +80,11 @@ public class Matrix
 
         int columnsCount = 0;
 
-        for (int i = 0; i < array.Length; i++)
+        foreach (Vector vector in array)
         {
-            if (columnsCount < array[i].Size)
+            if (columnsCount < vector.Size)
             {
-                columnsCount = array[i].Size;
+                columnsCount = vector.Size;
             }
         }
 
@@ -114,14 +103,14 @@ public class Matrix
     {
         StringBuilder stringBuilder = new StringBuilder("{");
 
-        for (int i = 0; i < RowsCount - 1; i++)
+        int iterationsCount = RowsCount - 1;
+
+        for (int i = 0; i < iterationsCount; i++)
         {
-            stringBuilder.Append(_rows[i]);
-            stringBuilder.Append(", ");
+            stringBuilder.Append(_rows[i]).Append(", ");
         }
 
-        stringBuilder.Append(_rows[RowsCount - 1]);
-        stringBuilder.Append("}");
+        stringBuilder.Append(_rows[RowsCount - 1]).Append('}');
 
         return stringBuilder.ToString();
     }
@@ -132,12 +121,9 @@ public class Matrix
 
         int hash = 1;
 
-        hash = prime * hash + RowsCount.GetHashCode();
-        hash = prime * hash + ColumnsCount.GetHashCode();
-
-        for (int i = 0; i < RowsCount; i++)
+        foreach (Vector vector in _rows)
         {
-            hash = prime * hash + _rows[i].GetHashCode();
+            hash = prime * hash + vector.GetHashCode();
         }
 
         return hash;
@@ -157,24 +143,17 @@ public class Matrix
 
         Matrix matrix = (Matrix)o;
 
-        if (RowsCount != matrix.RowsCount)
-        {
-            return false;
-        }
-
-        if (ColumnsCount != matrix.ColumnsCount)
+        if (RowsCount != matrix.RowsCount || ColumnsCount != matrix.ColumnsCount)
         {
             return false;
         }
 
         for (int i = 0; i < RowsCount; i++)
         {
-
-            if (_rows[i] != matrix._rows[i])
+            if (!_rows[i].Equals(matrix._rows[i]))
             {
                 return false;
             }
-
         }
 
         return true;
@@ -184,7 +163,7 @@ public class Matrix
     {
         if (rowIndex < 0 || rowIndex >= RowsCount)
         {
-            throw new ArgumentOutOfRangeException($"Row index must be >= 0 and < {RowsCount}. Row index: {rowIndex}", nameof(rowIndex));
+            throw new ArgumentOutOfRangeException(nameof(rowIndex), $"Row index must be >= 0 and < {RowsCount}. Row index: {rowIndex}");
         }
 
         return new Vector(_rows[rowIndex]);
@@ -194,7 +173,7 @@ public class Matrix
     {
         if (rowIndex < 0 || rowIndex >= RowsCount)
         {
-            throw new ArgumentOutOfRangeException($"Row index must be >= 0 and < {RowsCount}. Row index: {rowIndex}", nameof(rowIndex));
+            throw new ArgumentOutOfRangeException(nameof(rowIndex), $"Row index must be >= 0 and < {RowsCount}. Row index: {rowIndex}");
         }
 
         if (vector.Size != ColumnsCount)
@@ -202,16 +181,14 @@ public class Matrix
             throw new ArgumentException($"Vector size must be = {ColumnsCount}. Vector size: {vector.Size}", nameof(vector));
         }
 
-        Vector newVector = new Vector(vector);
-
-        _rows[rowIndex] = newVector;
+        _rows[rowIndex] = new Vector(vector);
     }
 
     public Vector GetColumn(int columnIndex)
     {
         if (columnIndex < 0 || columnIndex >= ColumnsCount)
         {
-            throw new ArgumentOutOfRangeException($"Column index must be >= 0 and < {ColumnsCount}. Column index: {columnIndex} ", nameof(columnIndex));
+            throw new ArgumentOutOfRangeException(nameof(columnIndex), $"Column index must be >= 0 and < {ColumnsCount}. Column index: {columnIndex} ");
         }
 
         double[] array = new double[RowsCount];
@@ -353,7 +330,7 @@ public class Matrix
     {
         if (matrix1.ColumnsCount != matrix2.ColumnsCount || matrix1.RowsCount != matrix2.RowsCount)
         {
-            throw new InvalidOperationException($"Matrices size must be same. Count of rows and columns in first matrix: {matrix1.RowsCount} x {matrix1.ColumnsCount}; " +
+            throw new ArgumentException($"Matrices size must be same. Count of rows and columns in first matrix: {matrix1.RowsCount} x {matrix1.ColumnsCount}; " +
                 $"in second matrix: {matrix2.RowsCount} x {matrix2.ColumnsCount}");
         }
 
@@ -368,8 +345,7 @@ public class Matrix
     {
         if (matrix1.ColumnsCount != matrix2.ColumnsCount || matrix1.RowsCount != matrix2.RowsCount)
         {
-            throw new InvalidOperationException($"Matrices size must be same. Count of rows and columns in first matrix: {matrix1.RowsCount} x {matrix1.ColumnsCount}; " +
-                $"in second matrix: {matrix2.RowsCount} x {matrix2.ColumnsCount}");
+            throw new ArgumentException($"Matrices size must be same. Count of rows and columns in first matrix: {matrix1.RowsCount} x {matrix1.ColumnsCount}, in second matrix: {matrix2.RowsCount} x {matrix2.ColumnsCount}");
         }
 
         Matrix matrix = new(matrix1);
@@ -383,7 +359,7 @@ public class Matrix
     {
         if (matrix1.ColumnsCount != matrix2.RowsCount)
         {
-            throw new InvalidOperationException($"Count of columns in the first matrix ({matrix1.ColumnsCount}) must be equal to the count of rows in the second matrix ({matrix2.RowsCount})");
+            throw new ArgumentException($"Count of columns in the first matrix ({matrix1.ColumnsCount}) must be equal to the count of rows in the second matrix ({matrix2.RowsCount})");
         }
 
         double[,] array = new double[matrix1.RowsCount, matrix2.ColumnsCount];
