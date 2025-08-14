@@ -244,7 +244,7 @@ public class SinglyLinkedList<T>
         for (int i = 0; i < _count; i++)
         {
             newSinglyLinkedList.Add(new ListItem<T>(this[i]));
-        }        
+        }
 
         return newSinglyLinkedList;
     }
