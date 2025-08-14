@@ -103,9 +103,9 @@ public class Matrix
     {
         StringBuilder stringBuilder = new StringBuilder("{");
 
-        int iterationsCount = RowsCount - 1;
+        int maxIndex = RowsCount - 1;
 
-        for (int i = 0; i < iterationsCount; i++)
+        for (int i = 0; i < maxIndex; i++)
         {
             stringBuilder.Append(_rows[i]).Append(", ");
         }
@@ -188,7 +188,7 @@ public class Matrix
     {
         if (columnIndex < 0 || columnIndex >= ColumnsCount)
         {
-            throw new ArgumentOutOfRangeException(nameof(columnIndex), $"Column index must be >= 0 and < {ColumnsCount}. Column index: {columnIndex} ");
+            throw new ArgumentOutOfRangeException(nameof(columnIndex), $"Column index must be >= 0 and < {ColumnsCount}. Column index: {columnIndex}");
         }
 
         double[] array = new double[RowsCount];
@@ -331,7 +331,7 @@ public class Matrix
         if (matrix1.ColumnsCount != matrix2.ColumnsCount || matrix1.RowsCount != matrix2.RowsCount)
         {
             throw new ArgumentException($"Matrices size must be same. Count of rows and columns in first matrix: {matrix1.RowsCount} x {matrix1.ColumnsCount}; " +
-                $"in second matrix: {matrix2.RowsCount} x {matrix2.ColumnsCount}");
+                $"in second matrix: {matrix2.RowsCount} x {matrix2.ColumnsCount}", $"{nameof(matrix1)} and {nameof(matrix2)}");
         }
 
         Matrix matrix = new(matrix1);
@@ -345,7 +345,8 @@ public class Matrix
     {
         if (matrix1.ColumnsCount != matrix2.ColumnsCount || matrix1.RowsCount != matrix2.RowsCount)
         {
-            throw new ArgumentException($"Matrices size must be same. Count of rows and columns in first matrix: {matrix1.RowsCount} x {matrix1.ColumnsCount}, in second matrix: {matrix2.RowsCount} x {matrix2.ColumnsCount}");
+            throw new ArgumentException($"Matrices size must be same. Count of rows and columns in first matrix: {matrix1.RowsCount} x {matrix1.ColumnsCount}; " +
+                $"in second matrix: {matrix2.RowsCount} x {matrix2.ColumnsCount}", $"{nameof(matrix1)} and {nameof(matrix2)}");
         }
 
         Matrix matrix = new(matrix1);
@@ -359,7 +360,8 @@ public class Matrix
     {
         if (matrix1.ColumnsCount != matrix2.RowsCount)
         {
-            throw new ArgumentException($"Count of columns in the first matrix ({matrix1.ColumnsCount}) must be equal to the count of rows in the second matrix ({matrix2.RowsCount})");
+            throw new ArgumentException($"Count of columns in the first matrix ({matrix1.ColumnsCount}) must be equal " +
+                $"to the count of rows in the second matrix ({matrix2.RowsCount})", $"{nameof(matrix1)} and {nameof(matrix2)}");
         }
 
         double[,] array = new double[matrix1.RowsCount, matrix2.ColumnsCount];
