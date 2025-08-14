@@ -1,19 +1,29 @@
-﻿using System.Text;
+﻿using System;
+using System.Text;
 
 namespace ListTask;
+
 public class SinglyLinkedList<T>
 {
-    private ListItem<T> _head;
-    private int _count = 1;
+    private ListItem<T>? _head;
+    private int _count { get; set; }
 
-    public SinglyLinkedList(ListItem<T> head)
+    public SinglyLinkedList()
     {
-        _head = head;
+        _count = 0;
+        _head = default;
+    }
+
+    public int GetCount()
+    {
+        return _count;
     }
 
     public override string ToString()
     {
         StringBuilder stringBuilder = new StringBuilder();
+
+        stringBuilder.Append('{');
 
         for (ListItem<T> item = _head; item != null; item = item.Next)
         {
@@ -25,62 +35,79 @@ public class SinglyLinkedList<T>
             }
         }
 
+        stringBuilder.Append('}');
+
         return stringBuilder.ToString();
     }
 
-    public int GetCount()
+    public T GetFirst()
     {
-        return _count;
+        if (_head == null)
+        {
+            throw new NullReferenceException("List is empty");
+        }
+
+        return _head.Data;
     }
 
-    public T GetHeadData()
+    private T this[int i]
     {
-        return _head.Data;
+        get
+        {
+            ListItem<T> item = GetItemAtIndex(i);
+
+            return item.Data;
+        }
+
+        set
+        {
+            ListItem<T> item = GetItemAtIndex(i);
+
+            item.Data = value;
+        }
+    }
+
+    private ListItem<T> GetItemAtIndex(int index)
+    {
+        ListItem<T> item = _head;
+
+        for (int i = 0; i < index; i++)
+        {
+            item = item.Next;
+        }
+
+        return item;
     }
 
     public T GetDataAtIndex(int index)
     {
-        if (_head == null)
+        if (index == 0)
         {
-            throw new InvalidOperationException("List is empty");
+            throw new InvalidOperationException("For this operation you should use GetFirst() method");
         }
 
         if (index < 0 || index >= _count)
         {
-            throw new IndexOutOfRangeException("Index is outside the count of list's elements");
+            throw new IndexOutOfRangeException($"Index {index} is outside the count of list's elements: from {0} to {_count}");
         }
 
-        ListItem<T> item = _head;
-
-        for (int i = 0; i < index; i++)
-        {
-            item = item.Next;
-        }
-
-        return item.Data;
+        return this[index];
     }
 
-    public T SetDataAtIndex(int index, T newData)
+    public T SetDataAtIndex(int index, T data)
     {
         if (_head == null)
         {
-            throw new InvalidOperationException("List is empty");
+            throw new NullReferenceException("List is empty");
         }
 
         if (index < 0 || index >= _count)
         {
-            throw new IndexOutOfRangeException("Index is outside the count of list's elements");
+            throw new IndexOutOfRangeException($"Index {index} is outside the count of list's elements: from {0} to {_count}");
         }
 
-        ListItem<T> item = _head;
-
-        for (int i = 0; i < index; i++)
-        {
-            item = item.Next;
-        }
-
-        T oldData = item.Data;
-        item.Data = newData;
+        T oldData = this[index];
+        this[index] = data;
 
         return oldData;
     }
@@ -89,47 +116,8 @@ public class SinglyLinkedList<T>
     {
         if (_head == null)
         {
-            throw new InvalidOperationException("List is empty");
+            throw new NullReferenceException("List is empty");
         }
-
-        if (index < 0 || index >= _count)
-        {
-            throw new IndexOutOfRangeException("Index is outside the count of list's elements");
-        }
-
-        if (index == 0)
-        {
-            throw new InvalidOperationException("For this operation you should use RemoveAtBeginning method");
-        }
-
-        ListItem<T> item = _head.Next;
-        ListItem<T> previousItem = _head;
-        ListItem<T> nextItem = _head.Next.Next;
-
-        for (int i = 1; i < index; i++)
-        {
-            item = item.Next;
-            previousItem = previousItem.Next;
-            nextItem = nextItem.Next;
-        }
-
-        previousItem.Next = nextItem;
-        _count--;
-
-        return item.Data;
-    }
-
-    public void InsertAtBeginning(ListItem<T> item)
-    {
-        ArgumentNullException.ThrowIfNull(item);
-
-        _head = new ListItem<T>(item.Data, _head);
-        _count++;
-    }
-
-    public void InsertAtIndex(int index, ListItem<T> item)
-    {
-        ArgumentNullException.ThrowIfNull(item);
 
         if (index < 0 || index > _count)
         {
@@ -138,32 +126,67 @@ public class SinglyLinkedList<T>
 
         if (index == 0)
         {
-            throw new InvalidOperationException("For this operation you should use InsertAtBeginning method");
+            T headData = _head.Data;
+            RemoveFirst();
+
+            return headData;
         }
 
-        ListItem<T> currentItem = _head.Next;
-        ListItem<T> previousItem = _head;
+        ListItem<T> item = GetItemAtIndex(index);
+        ListItem<T> previousItem = GetItemAtIndex(index - 1);
+        ListItem<T> nextItem = GetItemAtIndex(index + 1);
 
-        for (int i = 1; i < index; i++)
+        previousItem.Next = nextItem;
+        _count--;
+
+        return item.Data;
+    }
+
+    public void InsertFirst(ListItem<T> item)
+    {
+        ArgumentNullException.ThrowIfNull(item);
+
+        _head = new ListItem<T>(item.Data, _head);
+        _count++;
+    }
+
+    public void Insert(int index, ListItem<T> item)
+    {
+        ArgumentNullException.ThrowIfNull(item);
+
+        if (index == 0)
         {
-            currentItem = currentItem.Next;
-            previousItem = previousItem.Next;
+            InsertFirst(item);
+            return;
         }
+
+        if (index < 0 || index >= _count)
+        {
+            throw new IndexOutOfRangeException($"Index {index} is outside the count of list's elements: from {0} to {_count - 1}");
+        }
+
+        ListItem<T> currentItem = GetItemAtIndex(index);
+        ListItem<T> previousItem = GetItemAtIndex(index - 1);
 
         previousItem.Next = item;
         item.Next = currentItem;
         _count++;
     }
 
-    public T RemoveAtBeginning()
+    public T RemoveFirst()
     {
-        T data = _head.Data;
+        if (_head == null)
+        {
+            throw new NullReferenceException("List is empty");
+        }
 
         if (_head.Next == null)
         {
-            throw new InvalidOperationException("The list has only one item. You can't remove it");
+            _head = default;
+            _count = 0;
         }
 
+        T data = _head.Data;
         _head = _head.Next;
         _count--;
 
@@ -172,17 +195,15 @@ public class SinglyLinkedList<T>
 
     public bool Remove(T data)
     {
-        ListItem<T> item = _head;
+        ArgumentNullException.ThrowIfNull(data);
 
         for (int i = 0; i < _count; i++)
         {
-            if (item.Data.Equals(data))
+            if (this[i].Equals(data))
             {
                 RemoveAtIndex(i);
                 return true;
             }
-
-            item = item.Next;
         }
 
         return false;
@@ -192,40 +213,53 @@ public class SinglyLinkedList<T>
     {
         if (_count <= 1)
         {
-            throw new InvalidOperationException("List has only one item. It can't be Revered");
+            return;
         }
 
-        ListItem<T> previousItem = _head;
-        ListItem<T> currentItem = _head.Next;
-        ListItem<T> nextItem;
+        ListItem<T>? previousItem = null;
+        ListItem<T>? currentItem = _head;
+        ListItem<T>? nextItem;
 
-        _head.Next = null;
-
-        while (currentItem != null)
+        while (currentItem.Next != null)
         {
             nextItem = currentItem.Next;
-
             currentItem.Next = previousItem;
-
             previousItem = currentItem;
             currentItem = nextItem;
         }
 
-        _head = previousItem;
+        currentItem.Next = previousItem;
+        _head = currentItem;
     }
 
-    public static SinglyLinkedList<T> Copy(SinglyLinkedList<T> singlyLinkedList)
+    public SinglyLinkedList<T> Copy()
     {
-        T headData = singlyLinkedList.GetHeadData();
-        ListItem<T> newHead = new ListItem<T>(headData);
-
-        SinglyLinkedList<T> newSinglyLinkedList = new(newHead);
-
-        for (int i = 1; i < singlyLinkedList._count; i++)
+        if (_head == null)
         {
-            newSinglyLinkedList.InsertAtIndex(i, new ListItem<T>(singlyLinkedList.GetDataAtIndex(i)));
+            return new SinglyLinkedList<T>();
         }
 
+        SinglyLinkedList<T> newSinglyLinkedList = new();
+
+        for (int i = 0; i < _count; i++)
+        {
+            newSinglyLinkedList.Add(new ListItem<T>(this[i]));
+        }        
+
         return newSinglyLinkedList;
+    }
+
+    public void Add(ListItem<T> item)
+    {
+        ArgumentNullException.ThrowIfNull(item);
+
+        if (_head == null)
+        {
+            InsertFirst(item);
+            return;
+        }
+
+        GetItemAtIndex(_count - 1).Next = item;
+        _count++;
     }
 }

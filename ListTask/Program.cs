@@ -11,25 +11,26 @@ internal class Program
         ListItem<int> item5 = new(29);
         ListItem<int> item6 = new(11);
 
-        SinglyLinkedList<int> singlyLinkedList = new(item1);
+        SinglyLinkedList<int> singlyLinkedList = new();
 
         Console.WriteLine("Проверка добавление элементов в начало");
-        singlyLinkedList.InsertAtBeginning(item2);
+        singlyLinkedList.InsertFirst(item1);
+        singlyLinkedList.InsertFirst(item2);
         Console.WriteLine(singlyLinkedList);
         Console.WriteLine($"Длина: {singlyLinkedList.GetCount()}");
-        singlyLinkedList.InsertAtBeginning(item3);
+        singlyLinkedList.InsertFirst(item3);
         Console.WriteLine(singlyLinkedList);
         Console.WriteLine($"Длина: {singlyLinkedList.GetCount()}");
-        singlyLinkedList.InsertAtBeginning(item4);
+        singlyLinkedList.InsertFirst(item4);
         Console.WriteLine(singlyLinkedList);
         Console.WriteLine($"Длина: {singlyLinkedList.GetCount()}");
-        singlyLinkedList.InsertAtBeginning(item5);
+        singlyLinkedList.InsertFirst(item5);
         Console.WriteLine(singlyLinkedList);
         Console.WriteLine($"Длина: {singlyLinkedList.GetCount()}");
         Console.WriteLine();
 
         Console.WriteLine("Получение значения первого элемента");
-        Console.WriteLine(singlyLinkedList.GetHeadData());
+        Console.WriteLine(singlyLinkedList.GetFirst());
         Console.WriteLine();
 
         Console.WriteLine("Получение значения по индексу 2");
@@ -42,14 +43,14 @@ internal class Program
         Console.WriteLine($"Длина: {singlyLinkedList.GetCount()}");
         Console.WriteLine();
 
-        Console.WriteLine("Удаление элемента по индексу 1");
-        Console.WriteLine(singlyLinkedList.RemoveAtIndex(1));
+        Console.WriteLine("Удаление элемента по индексу 0");
+        Console.WriteLine(singlyLinkedList.RemoveAtIndex(0));
         Console.WriteLine(singlyLinkedList);
         Console.WriteLine($"Длина: {singlyLinkedList.GetCount()}");
         Console.WriteLine();
 
-        Console.WriteLine("Вставка элемента 11 по индексу 4");
-        singlyLinkedList.InsertAtIndex(4, item6);
+        Console.WriteLine("Вставка элемента 11 по индексу 3");
+        singlyLinkedList.Insert(3, item6);
         Console.WriteLine(singlyLinkedList);
         Console.WriteLine($"Длина: {singlyLinkedList.GetCount()}");
         Console.WriteLine();
@@ -64,15 +65,15 @@ internal class Program
         Console.WriteLine();
 
         Console.WriteLine("Удаление первого элемента");
-        Console.WriteLine(singlyLinkedList.RemoveAtBeginning());
+        Console.WriteLine(singlyLinkedList.RemoveFirst());
         Console.WriteLine(singlyLinkedList);
         Console.WriteLine($"Длина: {singlyLinkedList.GetCount()}");
         Console.WriteLine();
 
         Console.WriteLine("Разворот списка");
-        singlyLinkedList.InsertAtBeginning(item2);
-        singlyLinkedList.InsertAtBeginning(item3);
-        singlyLinkedList.InsertAtBeginning(item4);
+        singlyLinkedList.InsertFirst(item2);
+        singlyLinkedList.InsertFirst(item3);
+        singlyLinkedList.InsertFirst(item4);
         Console.WriteLine(singlyLinkedList);
         singlyLinkedList.Reverse();
         Console.WriteLine(singlyLinkedList);
@@ -80,7 +81,7 @@ internal class Program
         Console.WriteLine();
 
         Console.WriteLine("Копирование списка");
-        SinglyLinkedList<int> newSinglyLinkedList = SinglyLinkedList<int>.Copy(singlyLinkedList);
+        SinglyLinkedList<int> newSinglyLinkedList = singlyLinkedList.Copy();
         Console.WriteLine("Новый список после копирования");
         Console.WriteLine(newSinglyLinkedList);
     }
