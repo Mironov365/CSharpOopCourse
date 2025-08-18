@@ -1,65 +1,81 @@
-﻿using Microsoft.VisualBasic;
-
-namespace ArrayListHomeTask;
+﻿namespace ArrayListHomeTask;
 
 internal class Program
 {
-    static void Main(string[] args)
+    public static string FileReader(string path)
     {
-        Console.WriteLine("Задание 1:");
-        using (StreamReader streamReader = new StreamReader("..\\..\\..\\text.txt"))
+        using (StreamReader streamReader = new StreamReader(path))
         {
-            List<string> strings = new List<string>();
+            List<string> fileStrings = new List<string>();
 
-            string line;
+            string? line;
 
             while ((line = streamReader.ReadLine()) != null)
             {
-                strings.Add(line);
-            }    
+                fileStrings.Add(line);
+            }
 
-            Console.WriteLine(string.Join(", ", strings.ToArray()));
-            Console.WriteLine();
+            return string.Join(", ", fileStrings);
         }
+    }
+
+    public static void RemoveEvenNumbers(List<int> list)
+    {
+        ArgumentNullException.ThrowIfNull(list);
+
+        for (int i = list.Count - 1; i >= 0; i--)
+        {
+            if (list[i] % 2 == 0)
+            {
+                list.RemoveAt(i);
+            }
+        }
+    }
+
+    public static void RemoveDublicates(List<int> list)
+    {
+        ArgumentNullException.ThrowIfNull(list);
+
+        List<int> dublicates = new List<int>(list.Count);
+
+        for (int i = list.Count - 1; i >= 0; i--)
+        {
+            if (!dublicates.Contains(list[i]))
+            {
+                dublicates.Add(list[i]);
+            }
+            else
+            {
+                list.RemoveAt(i);
+            }
+        }
+    }
+
+    static void Main(string[] args)
+    {
+        Console.WriteLine("Задание 1:");
+
+        string line = FileReader("..\\..\\..\\text.txt");
+        Console.WriteLine(line);
+        Console.WriteLine();
 
         Console.WriteLine("Задание 2:");
 
-        List<int> numbers1 = new List<int> { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
+        List<int> numbers = new List<int> { 1, 2, 3, 4, 3, 5, 6, 6, 7, 7, 8, 9, 10, 4, 13 };
 
         Console.WriteLine("Список до изменения:");
-        Console.WriteLine(string.Join(", ", numbers1.ToArray()));
-
-        for (int i = 0; i < numbers1.Count; i++)
-        {
-            if (numbers1[i] % 2 == 0)
-            {
-                numbers1.RemoveAt(i);
-            }
-        }
-
-        Console.WriteLine("Список после изменения:");
-        Console.WriteLine(string.Join(", ", numbers1.ToArray()));
+        Console.WriteLine(string.Join(", ", numbers));
+        Console.WriteLine("Список после удаления чётных чисел:");
+        RemoveEvenNumbers(numbers);
+        Console.WriteLine(string.Join(", ", numbers));
         Console.WriteLine();
 
         Console.WriteLine("Задание 3:");
 
-        List<int> numbers2 = new List<int> { 1, 5, 2, 1, 3, 5 };
-        List<int> numbers3 = new List<int>();
-
         Console.WriteLine("Список изначальный:");
-        Console.WriteLine(string.Join(", ", numbers2.ToArray()));
-
-        foreach (int number in numbers2)
-        {
-            if (numbers3.Contains(number))
-            {
-                continue;
-            }
-
-            numbers3.Add(number);
-        }
-
-        Console.WriteLine("Список после переноса данных:");
-        Console.WriteLine(string.Join(", ", numbers3.ToArray()));
+        Console.WriteLine(string.Join(", ", numbers));
+        Console.WriteLine("Список после удаления повторяющихся чисел:");
+        RemoveDublicates(numbers);
+        Console.WriteLine(string.Join(", ", numbers));
     }
 }

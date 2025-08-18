@@ -1,4 +1,5 @@
 ﻿namespace ListTask;
+
 public class ListItem<T>
 {
     public T Data { get; set; }
