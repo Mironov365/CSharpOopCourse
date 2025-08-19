@@ -1,40 +1,38 @@
-﻿using Microsoft.VisualBasic;
-
-namespace ArrayListTask;
+﻿namespace ArrayListTask;
 
 internal class Program
 {
     static void Main(string[] args)
     {
-        MyList<double> myList = new MyList<double>();
+        NewList<double> myList = new NewList<double>();
 
         Console.WriteLine("Проверка метода Add:");
         myList.Add(33);
         myList.Add(23);
         myList.Add(13);
         myList.Add(3);
-        Console.WriteLine(string.Join(", ", myList.ToArray()));
+        Console.WriteLine(myList);
         Console.WriteLine($"Размер списка: {myList.Count}");
         Console.WriteLine();
 
-        Console.WriteLine("Проверка метода CopyTo (index - 5):");
+        Console.WriteLine("Проверка метода CopyTo (index: 5):");
         double[] doubleArray = new double[20];
         myList.CopyTo(doubleArray, 5);
         Console.WriteLine(string.Join(", ", doubleArray));
         Console.WriteLine();
 
         Console.WriteLine("Проверка метода TrimExcess() и Capacity");
-        Console.WriteLine("Вместимость листа до расширения:");
+        Console.WriteLine("Вместимость списка до расширения:");
         Console.WriteLine(myList.Capacity);
-        Console.WriteLine(string.Join(", ", myList.ToArray()));
+        Console.WriteLine(myList);
         myList.Capacity = 30;
-        Console.WriteLine("Вместимость листа после расширения:");
+        Console.WriteLine("Вместимость списка после расширения:");
         Console.WriteLine(myList.Capacity);
-        Console.WriteLine(string.Join(", ", myList.ToArray()));
+        Console.WriteLine(myList);
         myList.TrimExcess();
-        Console.WriteLine("Вместимость листа после TrimExcess():");
+        Console.WriteLine("Вместимость списка после TrimExcess():");
         Console.WriteLine(myList.Capacity);
-        Console.WriteLine(string.Join(", ", myList.ToArray()));
+        Console.WriteLine(myList);
         Console.WriteLine();
 
         Console.WriteLine("Проверка метода Contains");
@@ -53,24 +51,24 @@ internal class Program
 
         Console.WriteLine("Проверка метода Insert");
         myList.Insert(3, 111);
-        Console.WriteLine(string.Join(", ", myList.ToArray()));
+        Console.WriteLine(myList);
         Console.WriteLine($"Размер списка: {myList.Count}");
         myList.Insert(2, 95);
-        Console.WriteLine(string.Join(", ", myList.ToArray()));
+        Console.WriteLine(myList);
         Console.WriteLine($"Размер списка: {myList.Count}");
         myList.Insert(5, 88);
-        Console.WriteLine(string.Join(", ", myList.ToArray()));
+        Console.WriteLine(myList);
         Console.WriteLine($"Размер списка: {myList.Count}");
         Console.WriteLine();
 
         Console.WriteLine("Проверка метода Remove и RemoveAt");
         Console.WriteLine($"Удаление элемента 112: {myList.Remove(112)}");
         Console.WriteLine($"Удаление элемента 111: {myList.Remove(111)}");
-        Console.WriteLine(string.Join(", ", myList.ToArray()));
+        Console.WriteLine(myList);
         Console.WriteLine($"Размер списка: {myList.Count}");
         Console.WriteLine("Удаление элемента по индексу 4:");
         myList.RemoveAt(4);
-        Console.WriteLine(string.Join(", ", myList.ToArray()));
+        Console.WriteLine(myList);
         Console.WriteLine($"Размер списка: {myList.Count}");
         Console.WriteLine();
     }
