@@ -155,7 +155,7 @@ public class NewList<T> : IList<T>
             return;
         }
 
-        Array.Clear(_items, 0, Count);
+        Array.Clear(_items, 0, Count - 1);
         Count = 0;
         _modCount++;
     }
