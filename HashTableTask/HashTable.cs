@@ -57,17 +57,22 @@ public class HashTable<T> : ICollection<T>
                 continue;
             }
 
-            stringBuilder.Append('{');
-
-            for (int j = 0; j < _listsArray[i]!.Count - 1; j++)
-            {
-                stringBuilder.Append(_listsArray[i]![j]).Append(", ");
-            }
-
-            stringBuilder.Append(_listsArray[i]![_listsArray[i]!.Count - 1]).Append('}');
+            AppendListToStringBilder(stringBuilder, _listsArray[i]!);
         }
 
         return stringBuilder.ToString();
+    }
+
+    private void AppendListToStringBilder(StringBuilder stringBuilder, List<T> list)
+    {
+        stringBuilder.Append('{');
+
+        for (int i = 0; i < list.Count - 1; i++)
+        {
+            stringBuilder.Append(list[i]).Append(", ");
+        }
+
+        stringBuilder.Append(list[list.Count - 1]).Append('}');
     }
 
     public void Add(T item)
@@ -81,7 +86,7 @@ public class HashTable<T> : ICollection<T>
             _listsArray[itemHash] = new List<T>();
         }
 
-        _listsArray[itemHash].Add(item);
+        _listsArray[itemHash]!.Add(item);
 
         Count++;
         _modCount++;
@@ -94,7 +99,11 @@ public class HashTable<T> : ICollection<T>
             return;
         }
 
-        Array.Clear(_listsArray, 0, Count);
+        for (int i = 0; i < _listsArray.Length; i++)
+        {
+            _listsArray[i] = null;
+        }
+
         Count = 0;
         _modCount++;
     }
@@ -103,7 +112,7 @@ public class HashTable<T> : ICollection<T>
     {
         ArgumentNullException.ThrowIfNull(item);
 
-        int itemHash = item.GetHashCode();
+        int itemHash = Math.Abs(item.GetHashCode() % _listsArray.Length);
 
         if (_listsArray[itemHash] is null)
         {
@@ -127,7 +136,23 @@ public class HashTable<T> : ICollection<T>
             throw new ArgumentException($"Array has not enough size from index to end to copy. Array size to copy: {array.Length - arrayIndex}, list's count: {Count}", nameof(array));
         }
 
-        Array.Copy(_listsArray, 0, array, arrayIndex, Count);
+        if (arrayIndex >= array.Length)
+        {
+            throw new ArgumentOutOfRangeException($"Index has to be from 0 to {array.Length - 1}. Index: {arrayIndex}");
+        }
+
+        int tempIndex = arrayIndex;
+
+        for (int i = 0; i < _listsArray.Length; i++)
+        {
+            if (_listsArray[i] is null)
+            {
+                continue;
+            }
+
+            _listsArray[i]!.CopyTo(array, tempIndex);
+            tempIndex += _listsArray[i]!.Count;
+        }
     }
 
     public IEnumerator<T> GetEnumerator()
@@ -162,13 +187,20 @@ public class HashTable<T> : ICollection<T>
     {
         ArgumentNullException.ThrowIfNull(item);
 
-        int itemHash = item.GetHashCode();
+        int itemHash = Math.Abs(item.GetHashCode() % _listsArray.Length);
 
         if (_listsArray[itemHash] is null)
         {
             return false;
         }
 
-        return _listsArray[itemHash]!.Remove(item);
+        bool isElementRemoved = _listsArray[itemHash]!.Remove(item);
+
+        if (_listsArray[itemHash]!.Count == 0)
+        {
+            _listsArray[itemHash] = null;
+        }
+
+        return isElementRemoved;
     }
 }
