@@ -2,21 +2,21 @@
 
 internal class Program
 {
-    public static string FileReader(string path)
+    public static List<string> ReadFile(string path)
     {
-        using (StreamReader streamReader = new StreamReader(path))
+        using StreamReader streamReader = new StreamReader(path);
+
+        List<string> fileLines = new List<string>();
+
+        string? line;
+
+        while ((line = streamReader.ReadLine()) != null)
         {
-            List<string> fileStrings = new List<string>();
-
-            string? line;
-
-            while ((line = streamReader.ReadLine()) != null)
-            {
-                fileStrings.Add(line);
-            }
-
-            return string.Join(", ", fileStrings);
+            fileLines.Add(line);
         }
+
+        return fileLines;
+
     }
 
     public static void RemoveEvenNumbers(List<int> list)
@@ -32,31 +32,31 @@ internal class Program
         }
     }
 
-    public static void RemoveDublicates(List<int> list)
+    public static List<T> RemoveDuplicates<T>(List<T> list)
     {
         ArgumentNullException.ThrowIfNull(list);
 
-        List<int> dublicates = new List<int>(list.Count);
+        List<T> duplicates = new List<T>(list.Count);
+        List<T> listWithoutDuplicates = new List<T>(list.Count);
 
-        for (int i = list.Count - 1; i >= 0; i--)
+        for (int i = 0; i < list.Count; i++)
         {
-            if (!dublicates.Contains(list[i]))
+            if (!duplicates.Contains(list[i]))
             {
-                dublicates.Add(list[i]);
-            }
-            else
-            {
-                list.RemoveAt(i);
-            }
+                duplicates.Add(list[i]);
+                listWithoutDuplicates.Add(list[i]);
+            }           
         }
+
+        return listWithoutDuplicates;
     }
 
     static void Main(string[] args)
     {
         Console.WriteLine("Задание 1:");
 
-        string line = FileReader("..\\..\\..\\text.txt");
-        Console.WriteLine(line);
+        List<string> linesList = ReadFile("..\\..\\..\\text.txt");
+        Console.WriteLine(string.Join(", ", linesList));
         Console.WriteLine();
 
         Console.WriteLine("Задание 2:");
@@ -75,7 +75,9 @@ internal class Program
         Console.WriteLine("Список изначальный:");
         Console.WriteLine(string.Join(", ", numbers));
         Console.WriteLine("Список после удаления повторяющихся чисел:");
-        RemoveDublicates(numbers);
-        Console.WriteLine(string.Join(", ", numbers));
+
+        List<int> numbersWithoutDuplicates = RemoveDuplicates(numbers);
+
+        Console.WriteLine(string.Join(", ", numbersWithoutDuplicates));
     }
 }
