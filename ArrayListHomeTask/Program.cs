@@ -32,17 +32,17 @@ internal class Program
         }
     }
 
-    public static List<T> ListWithoutDuplicates<T>(List<T> list)
+    public static List<T> GetListWithoutDuplicates<T>(List<T> list)
     {
         ArgumentNullException.ThrowIfNull(list);
 
         List<T> listWithoutDuplicates = new List<T>(list.Count);
 
-        for (int i = 0; i < list.Count; i++)
+        foreach(T element in list)
         {
-            if (!listWithoutDuplicates.Contains(list[i]))
+            if (!listWithoutDuplicates.Contains(element))
             {
-                listWithoutDuplicates.Add(list[i]);
+                listWithoutDuplicates.Add(element);
             }
         }
 
@@ -63,6 +63,7 @@ internal class Program
 
         Console.WriteLine("Список до изменения:");
         Console.WriteLine(string.Join(", ", numbers));
+
         Console.WriteLine("Список после удаления чётных чисел:");
         RemoveEvenNumbers(numbers);
         Console.WriteLine(string.Join(", ", numbers));
@@ -72,10 +73,9 @@ internal class Program
 
         Console.WriteLine("Список изначальный:");
         Console.WriteLine(string.Join(", ", numbers));
+
         Console.WriteLine("Список после удаления повторяющихся чисел:");
-
-        List<int> numbersWithoutDuplicates = ListWithoutDuplicates(numbers);
-
+        List<int> numbersWithoutDuplicates = GetListWithoutDuplicates(numbers);
         Console.WriteLine(string.Join(", ", numbersWithoutDuplicates));
     }
 }
