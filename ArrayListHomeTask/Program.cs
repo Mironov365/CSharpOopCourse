@@ -2,9 +2,9 @@
 
 internal class Program
 {
-    public static List<string> ReadFile(string path)
+    public static List<string> GetFileLines(string filePath)
     {
-        using StreamReader streamReader = new StreamReader(path);
+        using StreamReader streamReader = new StreamReader(filePath);
 
         List<string> fileLines = new List<string>();
 
@@ -32,18 +32,16 @@ internal class Program
         }
     }
 
-    public static List<T> RemoveDuplicates<T>(List<T> list)
+    public static List<T> ListWithoutDuplicates<T>(List<T> list)
     {
         ArgumentNullException.ThrowIfNull(list);
 
-        List<T> duplicates = new List<T>(list.Count);
         List<T> listWithoutDuplicates = new List<T>(list.Count);
 
         for (int i = 0; i < list.Count; i++)
         {
-            if (!duplicates.Contains(list[i]))
+            if (!listWithoutDuplicates.Contains(list[i]))
             {
-                duplicates.Add(list[i]);
                 listWithoutDuplicates.Add(list[i]);
             }           
         }
@@ -55,8 +53,8 @@ internal class Program
     {
         Console.WriteLine("Задание 1:");
 
-        List<string> linesList = ReadFile("..\\..\\..\\text.txt");
-        Console.WriteLine(string.Join(", ", linesList));
+        List<string> lines = GetFileLines("..\\..\\..\\text.txt");
+        Console.WriteLine(string.Join(", ", lines));
         Console.WriteLine();
 
         Console.WriteLine("Задание 2:");
@@ -76,7 +74,7 @@ internal class Program
         Console.WriteLine(string.Join(", ", numbers));
         Console.WriteLine("Список после удаления повторяющихся чисел:");
 
-        List<int> numbersWithoutDuplicates = RemoveDuplicates(numbers);
+        List<int> numbersWithoutDuplicates = ListWithoutDuplicates(numbers);
 
         Console.WriteLine(string.Join(", ", numbersWithoutDuplicates));
     }
