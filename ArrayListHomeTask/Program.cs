@@ -16,7 +16,6 @@ internal class Program
         }
 
         return fileLines;
-
     }
 
     public static void RemoveEvenNumbers(List<int> list)
@@ -38,7 +37,7 @@ internal class Program
 
         List<T> listWithoutDuplicates = new List<T>(list.Count);
 
-        foreach(T element in list)
+        foreach (T element in list)
         {
             if (!listWithoutDuplicates.Contains(element))
             {
@@ -74,7 +73,7 @@ internal class Program
         Console.WriteLine("Список изначальный:");
         Console.WriteLine(string.Join(", ", numbers));
 
-        Console.WriteLine("Список после удаления повторяющихся чисел:");
+        Console.WriteLine("Список без повторяющихся чисел:");
         List<int> numbersWithoutDuplicates = GetListWithoutDuplicates(numbers);
         Console.WriteLine(string.Join(", ", numbersWithoutDuplicates));
     }
