@@ -38,7 +38,7 @@ internal class Program
         Console.WriteLine();
 
         Console.WriteLine("Изменение значения по индексу 2 на 43");
-        Console.WriteLine(singlyLinkedList.SetDataAtIndex(2, 43));
+        Console.WriteLine(singlyLinkedList[2] = 43);
         Console.WriteLine(singlyLinkedList);
         Console.WriteLine($"Длина: {singlyLinkedList.Count}");
         Console.WriteLine();
