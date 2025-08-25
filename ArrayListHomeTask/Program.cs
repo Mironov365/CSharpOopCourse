@@ -43,7 +43,7 @@ internal class Program
             if (!listWithoutDuplicates.Contains(list[i]))
             {
                 listWithoutDuplicates.Add(list[i]);
-            }           
+            }
         }
 
         return listWithoutDuplicates;
