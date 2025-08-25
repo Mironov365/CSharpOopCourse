@@ -1,92 +1,79 @@
 ﻿using System.Collections;
+using System.Collections.Generic;
 using System.Text;
 
 namespace HashTableTask;
 
 public class HashTable<T> : ICollection<T>
 {
-    private List<T>?[] _listsArray;
+    public readonly List<T>[] Lists;
 
     public int Count { get; private set; }
 
-    private int _modCount = 0;
+    private int _modCount;
 
     public bool IsReadOnly => false;
 
     public HashTable()
     {
-        _listsArray = new List<T>[102];
+        Lists = new List<T>[20];
     }
 
     public HashTable(int capacity)
     {
-        _listsArray = new List<T>[capacity];
-    }
-
-    public List<T>? this[int index]
-    {
-        get
+        if (capacity <= 0)
         {
-            if (index < 0 || index >= _listsArray.Length)
-            {
-                throw new ArgumentOutOfRangeException($"Index {index} is outside the hash table. It must be from {0} to {_listsArray.Length - 1}");
-            }
-
-            return _listsArray[index];
+            throw new IndexOutOfRangeException($"Capacity must be > 0. Capacity: {capacity}");
         }
 
-        set
-        {
-            if (index < 0 || index >= _listsArray.Length)
-            {
-                throw new ArgumentOutOfRangeException($"Index {index} is outside the hash table. It must be from {0} to {_listsArray.Length - 1}");
-            }
-
-            _listsArray[index] = value;
-        }
+        Lists = new List<T>[capacity];
     }
 
     public override string ToString()
     {
         StringBuilder stringBuilder = new StringBuilder();
-        
-        for (int i = 0; i < _listsArray.Length - 1; i++)
+
+        stringBuilder.Append('{');
+
+
+        for (int i = 0; i < Lists.Length; i++)
         {
-            if (_listsArray[i] == null)
+            if (Lists[i] == null || Lists[i]!.Count == 0)
             {
+                stringBuilder.Append("{null}");
                 continue;
             }
 
-            AppendListToStringBilder(stringBuilder, _listsArray[i]!);
+            stringBuilder.Append('{');
+
+            for (int j = 0; j < Lists[i]!.Count - 1; j++)
+            {
+                stringBuilder.Append(Lists[i][j]).Append(", ");
+            }
+
+            stringBuilder.Append(Lists[i][Lists[i]!.Count - 1]).Append("}");
         }
+
+        stringBuilder.Append('}');
 
         return stringBuilder.ToString();
     }
 
-    private void AppendListToStringBilder(StringBuilder stringBuilder, List<T> list)
+    public void Add(T? item)
     {
-        stringBuilder.Append('{');
-
-        for (int i = 0; i < list.Count - 1; i++)
+        if (item == null)
         {
-            stringBuilder.Append(list[i]).Append(", ");
+            return;
         }
 
-        stringBuilder.Append(list[list.Count - 1]).Append('}');
-    }
+        int itemHash = Math.Abs(item.GetHashCode() % Lists.Length);
 
-    public void Add(T item)
-    {
-        ArgumentNullException.ThrowIfNull(item);
-
-        int itemHash = Math.Abs(item.GetHashCode() % _listsArray.Length);
-
-        if (_listsArray[itemHash] == null)
+        if (Lists[itemHash] == null)
         {
-            _listsArray[itemHash] = new List<T>();
+            Lists[itemHash] = new List<T>();
         }
 
-        _listsArray[itemHash]!.Add(item);
+        Lists[itemHash]!.Add(item);
 
         Count++;
         _modCount++;
@@ -99,9 +86,13 @@ public class HashTable<T> : ICollection<T>
             return;
         }
 
-        for (int i = 0; i < _listsArray.Length; i++)
+        for (int i = 0; i < Lists.Length; i++)
         {
-            _listsArray[i] = null;
+            if (Lists[i] != null)
+            {
+                Lists[i]!.Clear();
+            }
+
         }
 
         Count = 0;
@@ -110,16 +101,14 @@ public class HashTable<T> : ICollection<T>
 
     public bool Contains(T item)
     {
-        ArgumentNullException.ThrowIfNull(item);
-
-        int itemHash = Math.Abs(item.GetHashCode() % _listsArray.Length);
-
-        if (_listsArray[itemHash] is null)
+        if (item == null)
         {
             return false;
         }
 
-        if (_listsArray[itemHash]!.Contains(item))
+        int itemHashCode = Math.Abs(item.GetHashCode() % Lists.Length);
+
+        if (Lists[itemHashCode]!.Contains(item))
         {
             return true;
         }
@@ -143,15 +132,15 @@ public class HashTable<T> : ICollection<T>
 
         int tempIndex = arrayIndex;
 
-        for (int i = 0; i < _listsArray.Length; i++)
+        foreach (List<T> list in Lists)
         {
-            if (_listsArray[i] is null)
+            if (list is null)
             {
                 continue;
             }
 
-            _listsArray[i]!.CopyTo(array, tempIndex);
-            tempIndex += _listsArray[i]!.Count;
+            list.CopyTo(array, tempIndex);
+            tempIndex += list.Count;
         }
     }
 
@@ -161,19 +150,19 @@ public class HashTable<T> : ICollection<T>
 
         for (int i = 0; i < Count; i++)
         {
-            if (_listsArray[i] == null)
+            if (Lists[i] == null)
             {
                 continue;
             }
 
-            for (int j = 0; j < _listsArray[i]!.Count; j++)
+            foreach (T item in Lists[i])
             {
                 if (modCount != _modCount)
                 {
                     throw new InvalidOperationException("List was modified");
                 }
 
-                yield return _listsArray[i]![j];
+                yield return item;
             }
         }
     }
@@ -185,22 +174,20 @@ public class HashTable<T> : ICollection<T>
 
     public bool Remove(T item)
     {
-        ArgumentNullException.ThrowIfNull(item);
-
-        int itemHash = Math.Abs(item.GetHashCode() % _listsArray.Length);
-
-        if (_listsArray[itemHash] is null)
+        if (item == null)
         {
             return false;
         }
 
-        bool isElementRemoved = _listsArray[itemHash]!.Remove(item);
+        int itemHash = Math.Abs(item.GetHashCode() % Lists.Length);
 
-        if (_listsArray[itemHash]!.Count == 0)
+        if (Lists[itemHash] is null)
         {
-            _listsArray[itemHash] = null;
+            return false;
         }
 
-        return isElementRemoved;
+        bool isRemoved = Lists[itemHash]!.Remove(item);
+
+        return isRemoved;
     }
 }

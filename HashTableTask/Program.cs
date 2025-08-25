@@ -1,12 +1,10 @@
-﻿using System.Collections.Generic;
-
-namespace HashTableTask;
+﻿namespace HashTableTask;
 
 internal class Program
 {
     static void Main(string[] args)
     {
-        HashTable<double> doublesHashTable = new HashTable<double>(30);
+        HashTable<double> doublesHashTable = new HashTable<double>(10);
 
         double double1 = 11;
         double double2 = 22;
