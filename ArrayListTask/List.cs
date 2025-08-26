@@ -1,27 +1,26 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Text;
 
 namespace ArrayListTask;
 
-public class NewList<T> : IList<T>
+public class List<T> : IList<T>
 {
-    private T[] _items;
+    private T?[] _items;
 
     public int Count { get; private set; }
 
-    private int _modCount = 0;
+    private int _modCount;
 
-    public NewList()
+    public List()
     {
         _items = new T[10];
     }
 
-    public NewList(int capacity)
+    public List(int capacity)
     {
         if (capacity < 0)
         {
-            throw new IndexOutOfRangeException($"Capacity must be > 0. Capacity: {capacity}");
+            throw new ArgumentException($"Capacity must be >= 0. Capacity: {capacity}", nameof(capacity));
         }
 
         _items = new T[capacity];
@@ -39,16 +38,19 @@ public class NewList<T> : IList<T>
             return false;
         }
 
-        NewList<T> list = (NewList<T>)o;
-
-        if (!_items.Equals(list._items))
-        {
-            return false;
-        }
+        List<T> list = (List<T>)o;
 
         if (Count != list.Count)
         {
             return false;
+        }
+
+        for (int i = 0; i < Count; i++)
+        {
+            if (!_items[i]!.Equals(list._items[i]))
+            {
+                return false;
+            }
         }
 
         return true;
@@ -61,9 +63,15 @@ public class NewList<T> : IList<T>
         int hash = 1;
 
         hash = prime * hash + Count.GetHashCode();
+        hash = prime * hash + _modCount.GetHashCode();
 
-        foreach (T item in _items)
+        foreach (T? item in _items)
         {
+            if (item == null)
+            {
+                continue;
+            }
+
             hash = prime * hash + item.GetHashCode();
         }
 
@@ -72,14 +80,19 @@ public class NewList<T> : IList<T>
 
     public override string ToString()
     {
-        StringBuilder stringBuilder = new StringBuilder("{");
+        if (Count == 0)
+        {
+            return "[]";
+        }
+
+        StringBuilder stringBuilder = new StringBuilder("[");
 
         for (int i = 0; i < Count - 1; i++)
         {
             stringBuilder.Append(_items[i]).Append(", ");
         }
 
-        stringBuilder.Append(_items[Count - 1]).Append('}');
+        stringBuilder.Append(_items[Count - 1]).Append(']');
 
         return stringBuilder.ToString();
     }
@@ -88,14 +101,15 @@ public class NewList<T> : IList<T>
     {
         get
         {
-            IndexCheck(index);
+            CheckIndex(index);
 
-            return _items[index];
+            return _items[index]!;
         }
 
         set
         {
-            IndexCheck(index);
+            CheckIndex(index);
+            _modCount++;
 
             _items[index] = value;
         }
@@ -111,7 +125,7 @@ public class NewList<T> : IList<T>
         {
             if (value < Count)
             {
-                throw new IndexOutOfRangeException($"New capacity must be equal or greater than Count. Count: {Count}, capacity: {value}");
+                throw new InvalidOperationException($"New capacity must be equal or greater than Count. Count: {Count}, capacity: {value}");
             }
 
             Array.Resize(ref _items, value);
@@ -120,7 +134,7 @@ public class NewList<T> : IList<T>
 
     public void TrimExcess()
     {
-        if (Count / _items.Length <= 0.9)
+        if (Convert.ToDouble(Count) / _items.Length <= 0.9)
         {
             Array.Resize(ref _items, Count);
         }
@@ -143,9 +157,10 @@ public class NewList<T> : IList<T>
         if (Capacity == 0)
         {
             Capacity = 1;
+            return;
         }
 
-        Capacity = _items.Length * 2;
+        Capacity *= 2;
     }
 
     public void Clear()
@@ -162,14 +177,14 @@ public class NewList<T> : IList<T>
 
     public bool Contains(T item)
     {
-        ArgumentNullException.ThrowIfNull(item);
+        bool isContains = false;
 
         if (IndexOf(item) != -1)
         {
-            return true;
+            isContains = true;
         }
 
-        return false;
+        return isContains;
     }
 
     public void CopyTo(T[] array, int arrayIndex)
@@ -179,6 +194,11 @@ public class NewList<T> : IList<T>
         if (array.Length - arrayIndex < Count)
         {
             throw new ArgumentException($"Array has not enough size from index to end to copy. Array size to copy: {array.Length - arrayIndex}, list's count: {Count}", nameof(array));
+        }
+
+        if (arrayIndex < 0)
+        {
+            throw new ArgumentOutOfRangeException(nameof(arrayIndex));
         }
 
         Array.Copy(_items, 0, array, arrayIndex, Count);
@@ -195,7 +215,7 @@ public class NewList<T> : IList<T>
                 throw new InvalidOperationException("List was modified");
             }
 
-            yield return _items[i];
+            yield return _items[i]!;
         }
     }
 
@@ -206,7 +226,10 @@ public class NewList<T> : IList<T>
 
     public int IndexOf(T item)
     {
-        ArgumentNullException.ThrowIfNull(item);
+        if (item == null)
+        {
+            return -1;
+        }
 
         for (int i = 0; i < Count; i++)
         {
@@ -215,7 +238,7 @@ public class NewList<T> : IList<T>
                 continue;
             }
 
-            if (_items[i].Equals(item))
+            if (Equals(_items[i], item))
             {
                 return i;
             }
@@ -226,7 +249,7 @@ public class NewList<T> : IList<T>
 
     public void Insert(int index, T item)
     {
-        IndexCheck(index);
+        CheckIndex(index);
 
         if (Count >= _items.Length)
         {
@@ -242,7 +265,10 @@ public class NewList<T> : IList<T>
 
     public bool Remove(T item)
     {
-        ArgumentNullException.ThrowIfNull(item);
+        if (item == null)
+        {
+            return false;
+        }
 
         int index = IndexOf(item);
 
@@ -254,12 +280,11 @@ public class NewList<T> : IList<T>
         RemoveAt(index);
 
         return true;
-
     }
 
     public void RemoveAt(int index)
     {
-        IndexCheck(index);
+        CheckIndex(index);
 
         if (index < Count - 1)
         {
@@ -271,11 +296,11 @@ public class NewList<T> : IList<T>
         _modCount++;
     }
 
-    private void IndexCheck(int index)
+    private void CheckIndex(int index)
     {
-        if (index < 0 || index > Count)
+        if (index < 0 || index >= Count)
         {
-            throw new IndexOutOfRangeException($"Index {index} is outside the count of list's elements: from {0} to {Count}");
+            throw new IndexOutOfRangeException($"Index {index} is outside the count of list's elements: from 0 to {Count - 1}");
         }
     }
 }

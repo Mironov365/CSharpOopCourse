@@ -157,7 +157,7 @@ public class SinglyLinkedList<T>
 
         for (ListItem<T>? item = _head; item != null; item = item.Next, i++)
         {
-            if (item.Data!.Equals(data))
+            if (Equals(item.Data, data))
             {
                 RemoveAtIndex(i);
                 return true;
