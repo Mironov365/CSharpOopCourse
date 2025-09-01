@@ -1,12 +1,11 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using System.Text;
 
 namespace HashTableTask;
 
 public class HashTable<T> : ICollection<T>
 {
-    public readonly List<T>[] Lists;
+    private List<T>[] _lists;
 
     public int Count { get; private set; }
 
@@ -16,7 +15,7 @@ public class HashTable<T> : ICollection<T>
 
     public HashTable()
     {
-        Lists = new List<T>[20];
+        _lists = new List<T>[20];
     }
 
     public HashTable(int capacity)
@@ -26,7 +25,7 @@ public class HashTable<T> : ICollection<T>
             throw new IndexOutOfRangeException($"Capacity must be > 0. Capacity: {capacity}");
         }
 
-        Lists = new List<T>[capacity];
+        _lists = new List<T>[capacity];
     }
 
     public override string ToString()
@@ -35,10 +34,9 @@ public class HashTable<T> : ICollection<T>
 
         stringBuilder.Append('{');
 
-
-        for (int i = 0; i < Lists.Length; i++)
+        foreach (List<T> list in _lists)
         {
-            if (Lists[i] == null || Lists[i]!.Count == 0)
+            if (list == null || list.Count == 0)
             {
                 stringBuilder.Append("{null}");
                 continue;
@@ -46,12 +44,12 @@ public class HashTable<T> : ICollection<T>
 
             stringBuilder.Append('{');
 
-            for (int j = 0; j < Lists[i]!.Count - 1; j++)
+            for (int i = 0; i < list.Count; i++)
             {
-                stringBuilder.Append(Lists[i][j]).Append(", ");
+                stringBuilder.Append(list[i]).Append(", ");
             }
 
-            stringBuilder.Append(Lists[i][Lists[i]!.Count - 1]).Append("}");
+            stringBuilder.Remove(stringBuilder.Length - 2, 2).Append('}');
         }
 
         stringBuilder.Append('}');
@@ -59,21 +57,16 @@ public class HashTable<T> : ICollection<T>
         return stringBuilder.ToString();
     }
 
-    public void Add(T? item)
+    public void Add(T item)
     {
-        if (item == null)
+        int index = GetIndex(item);
+
+        if (_lists[index] == null)
         {
-            return;
+            _lists[index] = new List<T>();
         }
 
-        int itemHash = Math.Abs(item.GetHashCode() % Lists.Length);
-
-        if (Lists[itemHash] == null)
-        {
-            Lists[itemHash] = new List<T>();
-        }
-
-        Lists[itemHash]!.Add(item);
+        _lists[index]!.Add(item);
 
         Count++;
         _modCount++;
@@ -86,13 +79,12 @@ public class HashTable<T> : ICollection<T>
             return;
         }
 
-        for (int i = 0; i < Lists.Length; i++)
+        foreach (List<T> list in _lists)
         {
-            if (Lists[i] != null)
+            if (list != null)
             {
-                Lists[i]!.Clear();
+                list.Clear();
             }
-
         }
 
         Count = 0;
@@ -101,19 +93,14 @@ public class HashTable<T> : ICollection<T>
 
     public bool Contains(T item)
     {
-        if (item == null)
+        if (item is null)
         {
             return false;
         }
 
-        int itemHashCode = Math.Abs(item.GetHashCode() % Lists.Length);
+        int index = GetIndex(item);
 
-        if (Lists[itemHashCode]!.Contains(item))
-        {
-            return true;
-        }
-
-        return false;
+        return _lists[index].Contains(item);
     }
 
     public void CopyTo(T[] array, int arrayIndex)
@@ -122,17 +109,17 @@ public class HashTable<T> : ICollection<T>
 
         if (array.Length - arrayIndex < Count)
         {
-            throw new ArgumentException($"Array has not enough size from index to end to copy. Array size to copy: {array.Length - arrayIndex}, list's count: {Count}", nameof(array));
+            throw new ArgumentException($"Array has not enough size from index to end to copy. Array size to copy: {array.Length - arrayIndex}, count of elemenst to copy: {Count}", nameof(array));
         }
 
-        if (arrayIndex >= array.Length)
+        if (arrayIndex < 0)
         {
-            throw new ArgumentOutOfRangeException($"Index has to be from 0 to {array.Length - 1}. Index: {arrayIndex}");
+            throw new ArgumentOutOfRangeException($"Index has to be more then 0. Index: {arrayIndex}");
         }
 
         int tempIndex = arrayIndex;
 
-        foreach (List<T> list in Lists)
+        foreach (List<T> list in _lists)
         {
             if (list is null)
             {
@@ -148,18 +135,18 @@ public class HashTable<T> : ICollection<T>
     {
         int modCount = _modCount;
 
-        for (int i = 0; i < Count; i++)
+        foreach (List<T> list in _lists)
         {
-            if (Lists[i] == null)
+            if (list == null)
             {
                 continue;
             }
 
-            foreach (T item in Lists[i])
+            foreach (T item in list)
             {
                 if (modCount != _modCount)
                 {
-                    throw new InvalidOperationException("List was modified");
+                    throw new InvalidOperationException("Count of elements was changed");
                 }
 
                 yield return item;
@@ -174,20 +161,18 @@ public class HashTable<T> : ICollection<T>
 
     public bool Remove(T item)
     {
-        if (item == null)
+        int index = GetIndex(item);
+
+        if (_lists[index] is null)
         {
             return false;
         }
 
-        int itemHash = Math.Abs(item.GetHashCode() % Lists.Length);
+        return _lists[index].Remove(item);
+    }
 
-        if (Lists[itemHash] is null)
-        {
-            return false;
-        }
-
-        bool isRemoved = Lists[itemHash]!.Remove(item);
-
-        return isRemoved;
+    private int GetIndex(T item)
+    {
+        return Math.Abs(item.GetHashCode() % _lists.Length);
     }
 }

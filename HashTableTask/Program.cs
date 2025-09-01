@@ -43,6 +43,9 @@ internal class Program
         Console.WriteLine("Удалим элемент 33");
         Console.WriteLine(doublesHashTable.Remove(33));
         Console.WriteLine(doublesHashTable);
+        Console.WriteLine("Удалим элемент 11");
+        Console.WriteLine(doublesHashTable.Remove(11));
+        Console.WriteLine(doublesHashTable);
         Console.WriteLine();
 
         Console.WriteLine("Проверка метода Clear");
