@@ -1,4 +1,6 @@
-﻿using System.Text;
+﻿using System;
+using System.Reflection;
+using System.Text;
 
 namespace ListTask;
 
@@ -20,51 +22,40 @@ public class SinglyLinkedList<T>
         StringBuilder stringBuilder = new StringBuilder();
         ListItem<T> item = _head;
 
-        stringBuilder.Append($"[{item.Data}");
+        stringBuilder.Append('[');
 
-        if (item.Next == null)
+        for (item = _head; item != null; item = item.Next!)
         {
-            stringBuilder.Append(']');
+            stringBuilder.Append(item.Data).Append(", ");
         }
 
-        for (item = _head.Next!; item.Next != null; item = item.Next)
-        {
-            stringBuilder.Append(", ").Append(item.Data);
-        }
-
-        stringBuilder.Append(", ").Append(item.Data).Append(']');
+        stringBuilder.Remove(stringBuilder.Length - 2, 2).Append(']');
 
         return stringBuilder.ToString();
     }
 
-    public T? GetFirst()
+    public T GetFirst()
     {
         if (_head == null)
         {
             throw new InvalidOperationException("List is empty");
         }
 
-        return _head.Data;
+        return _head.Data!;
     }
 
-    public T? this[int i]
+    public T this[int i]
     {
         get
         {
-            if (i < 0 || i >= Count)
-            {
-                throw new IndexOutOfRangeException($"Index {i} is outside the Count range: from 0 to {Count - 1}");
-            }
+            CheckIndex(i);
 
-            return GetItemAtIndex(i).Data;
+            return GetItemAtIndex(i).Data!;
         }
 
         set
         {
-            if (i < 0 || i >= Count)
-            {
-                throw new IndexOutOfRangeException($"Index {i} is outside the Count range: from 0 to {Count - 1}");
-            }
+            CheckIndex(i);
 
             GetItemAtIndex(i).Data = value;
         }
@@ -82,12 +73,9 @@ public class SinglyLinkedList<T>
         return item!;
     }
 
-    public T? RemoveAtIndex(int index)
+    public T RemoveAtIndex(int index)
     {
-        if (index < 0 || index >= Count)
-        {
-            throw new IndexOutOfRangeException($"Index {index} is outside the count of list's elements: from {0} to {Count - 1}");
-        }
+        CheckIndex(index);
 
         if (index == 0)
         {
@@ -95,24 +83,17 @@ public class SinglyLinkedList<T>
         }
 
         ListItem<T> previousItem = GetItemAtIndex(index - 1);
-        ListItem<T>? item = previousItem.Next;
+        ListItem<T> item = previousItem.Next!;
 
-        if (index == Count - 1)
-        {
-            previousItem.Next = null;
-        }
-
-        previousItem.Next = item!.Next;
+        previousItem.Next = item.Next;
         Count--;
 
-        return item.Data;
+        return item.Data!;
     }
 
-    public void InsertFirst(T? item)
+    public void InsertFirst(T item)
     {
-        ArgumentNullException.ThrowIfNull(item);
-
-        _head = new ListItem<T>(item, _head!);
+        _head = new ListItem<T>(item, _head);
         Count++;
     }
 
@@ -126,40 +107,51 @@ public class SinglyLinkedList<T>
 
         if (index < 0 || index > Count)
         {
-            throw new IndexOutOfRangeException($"Index {index} is outside the count of list's elements: from {0} to {Count}");
+            throw new IndexOutOfRangeException($"Index {index} is outside the range: from 0 to {Count}");
         }
 
         ListItem<T> previousItem = GetItemAtIndex(index - 1);
 
-        ListItem<T> newItem = new ListItem<T>(item, previousItem.Next);
-
-        previousItem.Next = newItem;
+        previousItem.Next = new ListItem<T>(item, previousItem.Next);
         Count++;
     }
 
-    public T? RemoveFirst()
+    public T RemoveFirst()
     {
         if (_head == null)
         {
             throw new InvalidOperationException("List is empty");
         }
 
-        T? data = _head.Data;
+        T data = _head.Data;
         _head = _head.Next;
         Count--;
 
         return data;
     }
 
-    public bool Remove(T? data)
+    public bool Remove(T data)
     {
-        int i = 0;
+        if (_head is null)
+        {
+            return false;
+        }
 
-        for (ListItem<T>? item = _head; item != null; item = item.Next, i++)
+        if (Equals(_head.Data, data))
+        {
+            RemoveFirst();
+        }
+
+        ListItem<T> previousItem = _head;
+        ListItem<T> item;
+
+        for (item = previousItem.Next!; item != null; item = item.Next!, previousItem = previousItem.Next!)
         {
             if (Equals(item.Data, data))
             {
-                RemoveAtIndex(i);
+                previousItem.Next = item.Next;
+                Count--;
+
                 return true;
             }
         }
@@ -197,13 +189,19 @@ public class SinglyLinkedList<T>
 
         SinglyLinkedList<T> newSinglyLinkedList = new();
 
-        for (ListItem<T>? item = _head; item != null; item = item.Next!)
+        for (ListItem<T>? item = _head; item != null; item = item.Next)
         {
-            newSinglyLinkedList.InsertFirst(item.Data);
+            newSinglyLinkedList.Insert(newSinglyLinkedList.Count, item.Data);
         }
 
-        newSinglyLinkedList.Reverse();
-
         return newSinglyLinkedList;
+    }
+
+    private void CheckIndex(int index)
+    {
+        if (index < 0 || index >= Count)
+        {
+            throw new IndexOutOfRangeException($"Index {index} is outside the range: from 0 to {Count - 1}");
+        }
     }
 }

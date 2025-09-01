@@ -4,7 +4,7 @@ internal class Program
 {
     static void Main(string[] args)
     {
-        int item1 = 34;
+        int item1 = 35;
         int item2 = 15;
         int item3 = 10;
         int item4 = 20;
@@ -49,8 +49,12 @@ internal class Program
         Console.WriteLine($"Длина: {singlyLinkedList.Count}");
         Console.WriteLine();
 
-        Console.WriteLine("Вставка элемента 11 по индексу 3");
-        singlyLinkedList.Insert(3, item6);
+        Console.WriteLine("Вставка элемента 11 по индексу 4");
+        singlyLinkedList.Insert(4, item6);
+        Console.WriteLine(singlyLinkedList);
+        Console.WriteLine($"Длина: {singlyLinkedList.Count}");
+        Console.WriteLine("Вставка элемента 19 по индексу 2");
+        singlyLinkedList.Insert(2, 19);
         Console.WriteLine(singlyLinkedList);
         Console.WriteLine($"Длина: {singlyLinkedList.Count}");
         Console.WriteLine();
@@ -84,5 +88,6 @@ internal class Program
         SinglyLinkedList<int> newSinglyLinkedList = singlyLinkedList.Copy();
         Console.WriteLine("Новый список после копирования");
         Console.WriteLine(newSinglyLinkedList);
+        Console.WriteLine($"Длина: {newSinglyLinkedList.Count}");
     }
 }
